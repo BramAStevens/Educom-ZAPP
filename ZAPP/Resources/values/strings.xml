@@ -10,4 +10,17 @@
 		description ntext
 		)
 	</string>
+	<string name="createTableUser">
+		create table user
+		(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		username ntext,
+		password ntext,
+		_mby ntext,
+		_by ntext,
+		_modified ntext,
+		_created ntext,
+		_id ntext
+		)
+	</string>
 </resources>

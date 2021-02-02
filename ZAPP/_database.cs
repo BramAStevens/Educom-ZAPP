@@ -13,86 +13,135 @@ using Android.Content;
 using Android.Content.Res;
 using ZAPP;
 
-
 namespace ZAPP
 {
-    class _database
+   class _database
     {
         // Context definieren
         private Context context;
-        private string url = "https://webservices.educom.nu/services/first/";
-        private string pathToDatabase;
-
+        private string educomUrl = "https://webservices.educom.nu/services/first/";
+        private string userUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/user?token=9d9a3b472d501a972c788077b12fb5/";
+        private string educomDB;
+        private string userDB;
+        
 
         // Database maken
-        public void createDatabase()
+        public string createDatabase(string url, string createTableData, string databaseName, Action<string, string> downloadData) // 
         {
             Resources res = this.context.Resources;
             string app_name = res.GetString(Resource.String.app_name);
             string app_version = res.GetString(Resource.String.app_version);
-            string createTableData = res.GetString(Resource.String.createTableData);
 
             Console.WriteLine(createTableData);
 
-            string dbname = "_db_" + app_name + "_" + app_version + ".sqlite";
+            string dbname = $"_db_{app_name}_{app_version}_{databaseName}.sqlite";
             Console.WriteLine(dbname);
 
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            this.pathToDatabase = Path.Combine(documentsPath, dbname);
+            string databasePath = Path.Combine(documentsPath, dbname);
 
-            if (!File.Exists(pathToDatabase))
+            if (!File.Exists(databasePath))
             {
-
-                SqliteConnection.CreateFile(this.pathToDatabase);
-                var connectionString = String.Format("Data Source ={0}; Version = 3;", this.pathToDatabase);
+                var connectionString = String.Format("Data Source={0};Version=3;", databasePath);
                 using (var conn = new SqliteConnection(connectionString))
                 {
                     conn.Open();
-
                     using (var cmd = conn.CreateCommand())
                     {
                         // Table data
-
                         cmd.CommandText = createTableData;
                         cmd.CommandType = CommandType.Text;
                         cmd.ExecuteNonQuery();
-
                     }
                     conn.Close();
                 }
-                this.downloadData();
+                downloadData(url, databasePath);
             }
+            return databasePath;
         }
 
-        public void downloadData()
+        public void createAllDatabases()
+        {
+            Resources res = this.context.Resources;
+
+            this.educomDB = createDatabase(educomUrl, res.GetString(Resource.String.createTableData), "educomDB", downloadEducomData);
+            this.userDB = createDatabase(userUrl, res.GetString(Resource.String.createTableUser), "userDB", downloadUserData);
+          //  this.userDB = createDatabase(newTableUrl, res.GetString(Resource.String.createTableNew, "userDB", downloadNewTableData));
+        }
+
+        public void downloadUserData(string url, string databasePath)
         {
             var webClient = new WebClient();
             webClient.Encoding = Encoding.UTF8;
-
             try
             {
-                byte[] myDataBuffer = webClient.DownloadData(this.url);
+                byte[] myDataBuffer = webClient.DownloadData(url);
                 string download = Encoding.ASCII.GetString(myDataBuffer);
                 JsonValue value = JsonValue.Parse(download);
+                var entries = value["entries"];
 
-
-                foreach (JsonObject result in value)
+                foreach (JsonObject item in entries)
                 {
-                    Console.WriteLine(result["code"] + " = " + result["description"]);
-                    this.dataToDatabase(result["code"], result["description"]);
-                    Console.WriteLine("DATA DOWNLOADED");
+
+                    Console.WriteLine($"{item["username"]} = {item["password"]}");
+                    this.userToDatabase(item["username"], item["password"], databasePath);
+
                 }
+
             }
             catch (WebException)
             {
-                // Doe vooralsnog niks, straks wellicht een boolean terug
-                // geven of e.e.a. gelukt is of niet
+
+            }
+        }
+        public void downloadEducomData(string url, string databasePath)
+        {
+            var webClient = new WebClient();
+            webClient.Encoding = Encoding.UTF8;
+            try
+            {
+                byte[] myDataBuffer = webClient.DownloadData(url);
+                string download = Encoding.ASCII.GetString(myDataBuffer);
+                JsonValue value = JsonValue.Parse(download);
+                foreach (JsonObject item in value)
+                {
+                   
+                        Console.WriteLine($"{item["code"]} = {item["description"]}");
+                        this.dataToDatabase(item["code"], item["description"], databasePath);
+          
+                }
+
+            }
+            catch (WebException)
+            {
+
             }
         }
 
-        public void dataToDatabase(string code, string description)
+        public void userToDatabase(string username, string password, string dbPath)
         {
-            var connectionString = String.Format("Data Source ={0}; Version = 3;", this.pathToDatabase);
+            var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    // Table data
+                    cmd.CommandText = "INSERT INTO user (username,password) VALUES (@username, @password)";
+                    cmd.Parameters.Add(new SqliteParameter("@username", username));
+                    cmd.Parameters.Add(new SqliteParameter("@password", password));
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                    Console.WriteLine("USER INSERTED TO DATABASE");
+                }
+                conn.Close();
+            }
+        }
+
+        public void dataToDatabase(string code, string description, string dbPath)
+        {
+            var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
             {
                 conn.Open();
@@ -111,10 +160,10 @@ namespace ZAPP
             }
         }
 
-        public ArrayList getAllData()
+        public ArrayList getAllData(string dbPath)
         {
             ArrayList dataRecords = new ArrayList();
-            var connectionString = String.Format("Data Source={0};Version=3;", this.pathToDatabase);
+            var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
             {
                 conn.Open();
@@ -138,30 +187,36 @@ namespace ZAPP
             return dataRecords;
         }
         // Constructor
-
         public _database(Context context)
         {
             this.context = context;
-            this.createDatabase();
+            this.createAllDatabases();
         }
-        public class dataRecord
+
+    }
+
+    public class dataRecord
+    {
+        public int id;
+        public string code;
+        public string description;
+
+        public dataRecord()
         {
-            public int id;
-            public string code;
-            public string description;
 
-            public dataRecord(JsonValue record)
-            {
-                this.code = (string)record["code"];
-                this.description = (string)record["description"];
-            }
+        }
 
-            public dataRecord(SqliteDataReader record)
-            {
-                this.id = (int)(Int64)record["id"];
-                this.code = (string)record["code"];
-                this.description = (string)record["description"];
-            }
+        public dataRecord(JsonValue record)
+        {
+            this.code = (string)record["code"];
+            this.description = (string)record["description"];
+        }
+
+        public dataRecord(SqliteDataReader record)
+        {
+            this.id = (int)(Int64)record["id"];
+            this.code = (string)record["code"];
+            this.description = (string)record["description"];
         }
     }
 }

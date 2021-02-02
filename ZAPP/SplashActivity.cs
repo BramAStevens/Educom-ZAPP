@@ -20,7 +20,7 @@ namespace ZAPP
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            _database db = new _database(this);
+            Config.callDatabase(new _database(this));
             Thread.Sleep(1000);
             StartActivity(typeof(Home));
         }

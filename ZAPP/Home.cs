@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Android.Content.Res;
 
 namespace ZAPP
 {
@@ -22,11 +23,17 @@ namespace ZAPP
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Home);
-            
+            Resources res = this.Resources;
+            string app_name = res.GetString(Resource.String.app_name);
+            string app_version = res.GetString(Resource.String.app_version);
+            string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            string dbname = $"_db_{app_name}_{app_version}_educomDB.sqlite";
+            string databasePath = System.IO.Path.Combine(documentsPath, dbname);
+
             _database db = new _database(this);
-            result = db.getAllData(); // arraylist
+            result = db.getAllData(databasePath); // arraylist
             records = new List<ListRecord>();  // define new list
-            foreach (_database.dataRecord value in result) // copy from results into records
+            foreach (dataRecord value in result) // copy from results into records
             {
                 ListRecord row = new ListRecord(value.id, value.code, value.description);
                 records.Add(row);

@@ -63,6 +63,7 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="Detail.cs" />
     <Compile Include="Home.cs" />
     <Compile Include="HomeListViewAdapter.cs" />
