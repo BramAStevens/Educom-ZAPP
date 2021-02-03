@@ -23,7 +23,6 @@ namespace ZAPP
         private string userUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/user?token=9d9a3b472d501a972c788077b12fb5/";
         private string activityUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/activity?token=9d9a3b472d501a972c788077b12fb5/";
         private string clientUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/client?token=9d9a3b472d501a972c788077b12fb5/";
-        private string educomDB;
         public static string ZAPPDB = "ZAPPDB";
 
         // Constructor
@@ -78,8 +77,34 @@ namespace ZAPP
             createDatabase(taskUrl, res.GetString(Resource.String.createTableTask), downloadTaskData);
             createDatabase(activityUrl, res.GetString(Resource.String.createTableActivity), downloadActivityData);
             createDatabase(userUrl, res.GetString(Resource.String.createTableUser), downloadUserData);
+            createDatabase(clientUrl, res.GetString(Resource.String.createTableActivity), downloadClientData);
         }
 
+        public void downloadClientData(string url, string databasePath)
+        {
+            var webClient = new WebClient();
+            webClient.Encoding = Encoding.UTF8;
+            try
+            {
+                byte[] myDataBuffer = webClient.DownloadData(url);
+                string download = Encoding.ASCII.GetString(myDataBuffer);
+                JsonValue value = JsonValue.Parse(download);
+                var entries = value["entries"];
+
+                foreach (JsonObject item in entries)
+                {
+
+                    Config.log($"{item["map"]} = map, {item["address"]} = address,  {item["telephone"]} = telephone, {item["planning"]} = planning ");
+                    this.clientToDatabase(item["map"], item["address"], item["telephone"], item["planning"], databasePath);
+
+                }
+
+            }
+            catch (WebException)
+            {
+
+            }
+        }
         public void downloadActivityData(string url, string databasePath)
         {
             var webClient = new WebClient();
@@ -154,6 +179,30 @@ namespace ZAPP
             {
 
             }
+        }
+
+        public void clientToDatabase(string map, string address, string telephone, string planning, string dbPath)
+        {
+            var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    // Table data
+                    cmd.CommandText = "INSERT INTO client (map, address, telephone, planning) VALUES (@map, @address, @telephone, @planning)";
+                    cmd.Parameters.Add(new SqliteParameter("@map", map));
+                    cmd.Parameters.Add(new SqliteParameter("@address", address));
+                    cmd.Parameters.Add(new SqliteParameter("@telephone", telephone));
+                    cmd.Parameters.Add(new SqliteParameter("@planning", planning));
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                    Config.log("CLIENT INSERTED INTO DB");
+                }
+                conn.Close();
+            }
+            this.getAllClients(dbPath);
         }
 
         public void activityToDatabase(string task_id, string isCompleted, string activityName, string dbPath)
@@ -306,6 +355,33 @@ namespace ZAPP
             }
             Console.WriteLine("TASKS RETURNED TO TASKRECORDS");
             return taskRecords;
+        }
+
+        public ArrayList getAllClients(string dbPath)
+        {
+            ArrayList clientRecords = new ArrayList();
+            var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM client";
+                    cmd.CommandType = CommandType.Text;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Config.log("ALL CLIENTS ARE BEING READ");
+                            clientRecords.Add(new clientRecord(reader));
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            Console.WriteLine("CLIENT RETURNED TO CLIENTRECORDS");
+            return clientRecords;
         }
     }
 }

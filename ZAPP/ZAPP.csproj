@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="activityRecord.cs" />
+    <Compile Include="clientRecord.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Detail.cs" />
     <Compile Include="Home.cs" />

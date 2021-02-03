@@ -10,8 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 
-namespace ZAPP // bij het aanmaken van splash activity =====> zet me in deze klasse een lijst met gebruikers --> kan je overal aanroepen
-    // alles wat ik overal nodig heb kan ik hier zetten en ophalen
+namespace ZAPP 
 {
     static class Config
     {
@@ -19,6 +18,8 @@ namespace ZAPP // bij het aanmaken van splash activity =====> zet me in deze kla
         private static _database db;
         private static ArrayList users;
         private static ArrayList tasks;
+        private static ArrayList clients;
+        private static ArrayList activities;
         private static string dbPath;
         public static void callDatabase(_database _db, string _dbPath)
         {
@@ -36,7 +37,12 @@ namespace ZAPP // bij het aanmaken van splash activity =====> zet me in deze kla
             return db.getAllTasks(dbPath);
         }
 
-        public static ArrayList createUsers()
+        public static ArrayList getAllActivities() // is still hardcoded in _database class
+        {
+            return db.getAllActivities(dbPath);
+        }
+
+        public static ArrayList getAllUsers() // is still hardcoded in _database class
         {
            return db.getAllUsers(dbPath);
  
@@ -45,6 +51,10 @@ namespace ZAPP // bij het aanmaken van splash activity =====> zet me in deze kla
 
         // for task & activity for example ==> make sure that every task has a list of activities //
 
+        public static ArrayList getAllClients() // is still hardcoded in _database class
+        {
+            return db.getAllClients(dbPath);
+        }
 
         public static void log(string text)
         {

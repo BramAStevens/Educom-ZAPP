@@ -55,4 +55,19 @@
 		_id ntext
 		)
 	</string>
+	<string name="createTableActivity">
+		create table activity
+		(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		map ntext,
+		address ntext,
+		telephone ntext,
+		planning ntext,
+		_mby ntext,
+		_by ntext,
+		_modified ntext,
+		_created ntext,
+		_id ntext
+		)
+	</string>
 </resources>
