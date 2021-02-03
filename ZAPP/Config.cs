@@ -16,11 +16,22 @@ namespace ZAPP // bij het aanmaken van splash activity =====> zet me in deze kla
     {
         //  public static List<T> users { get; set; };
         private static _database db;
-      //  private static List<users> users;
+
+        //  private static List<users> users;
 
         public static void callDatabase(_database _db)
         {
             db = _db;
+        }
+
+        public static _database getDB()
+        {
+            return db;
+        }
+        
+        public static void getAllTasks()
+        {
+
         }
 
         public static void createUsers()

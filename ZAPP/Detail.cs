@@ -20,14 +20,9 @@ namespace ZAPP
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Detail);
-            Resources res = this.Resources;
-            string app_name = res.GetString(Resource.String.app_name);
-            string app_version = res.GetString(Resource.String.app_version);
-            string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-            string dbname = $"_db_{app_name}_{app_version}_educomDB.sqlite";
-            string databasePath = System.IO.Path.Combine(documentsPath, dbname);
+            string databasePath = _database.makeDatabaseName(this);
 
-            _database db = new _database(this);
+            _database db = Config.getDB();
             ArrayList result = db.getAllTasks(databasePath); // arraylist
             List<ListRecord> records = new List<ListRecord>();  // define new list
             foreach (taskRecord value in result) // copy from results into records

@@ -5,6 +5,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using System.IO;
 
 namespace ZAPP
 {
@@ -15,12 +16,23 @@ namespace ZAPP
 
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true,
    NoHistory = true)]
+    
+   
     public class SplashActivity : Activity
     {
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-         //   Config.callDatabase(new _database(this));
+
+            string databasePath = _database.makeDatabaseName(this);
+
+            if (!File.Exists(databasePath))
+            {
+                Config.callDatabase(new _database(this));
+            } else
+            {
+                Config.callDatabase(new _database(this, true));
+            }
             Thread.Sleep(1000);
             StartActivity(typeof(Home));
         }

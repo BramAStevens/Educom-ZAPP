@@ -18,8 +18,8 @@ namespace ZAPP
         public string user_id;
         public string startTask;
         public string stopTask;
-        public string taskDate;
         public string taskName;
+        public string taskDate;
         public string isCompleted;
 
         public ListRecord(int id, string taskName, string taskDate)

@@ -18,36 +18,43 @@ namespace ZAPP
    class _database
     {
         // Context definieren
-        private Context context;
+        private Activity activity;
         private string taskUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/task?token=9d9a3b472d501a972c788077b12fb5/";
         private string userUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/user?token=9d9a3b472d501a972c788077b12fb5/";
         private string activityUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/activity?token=9d9a3b472d501a972c788077b12fb5/";
         private string clientUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/client?token=9d9a3b472d501a972c788077b12fb5/";
         private string educomDB;
-        private string ZAPPDB;
-      
+        public static string ZAPPDB = "ZAPPDB";
 
         // Constructor
-        public _database(Context context)
+        public _database(Activity activity)
         {
-            this.context = context;
+            this.activity = activity;
             this.createAllDatabases();
         }
 
-        // Database maken
-        public string createDatabase(string url, string createTableData, string databaseName, Action<string, string> downloadData) // 
+        public _database(Activity activity, bool doNotRun)
         {
-            Resources res = this.context.Resources;
+            this.activity = activity;
+        }
+
+        public static string makeDatabaseName(Activity activity)
+        {
+            Resources res = activity.Resources;
             string app_name = res.GetString(Resource.String.app_name);
             string app_version = res.GetString(Resource.String.app_version);
 
-            Console.WriteLine(createTableData);
-
-            string dbname = $"_db_{app_name}_{app_version}_{databaseName}.sqlite";
+            string dbname = $"_db_{app_name}_{app_version}_{_database.ZAPPDB}.sqlite";
             Console.WriteLine(dbname);
 
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             string databasePath = Path.Combine(documentsPath, dbname);
+            return databasePath;
+        }
+        // Database maken
+        public void createDatabase(string url, string createTableData, Action<string, string> downloadData) // 
+        {
+                string databasePath = makeDatabaseName(this.activity); 
 
                 var connectionString = String.Format("Data Source={0};Version=3;", databasePath);
                 using (var conn = new SqliteConnection(connectionString))
@@ -63,21 +70,15 @@ namespace ZAPP
                     conn.Close();
                 }
                 downloadData(url, databasePath);
-            
-            return databasePath;
         }
 
         public void createAllDatabases()
         {
-            Resources res = this.context.Resources;
+            Resources res = this.activity.Resources;
 
-            this.educomDB = createDatabase(taskUrl, res.GetString(Resource.String.createTableTask), "educomDB", downloadTaskData);
-            Config.log("before zappdb");
-            this.ZAPPDB = createDatabase(activityUrl, res.GetString(Resource.String.createTableActivity), "ZAPPDB", downloadActivityData);
-            Config.log("before zappdb1");
-            this.ZAPPDB = createDatabase(userUrl, res.GetString(Resource.String.createTableUser), "ZAPPDB", downloadUserData);
-            Config.log("ENDEND");
-
+            createDatabase(taskUrl, res.GetString(Resource.String.createTableTask), downloadTaskData);
+            createDatabase(activityUrl, res.GetString(Resource.String.createTableActivity), downloadActivityData);
+            createDatabase(userUrl, res.GetString(Resource.String.createTableUser), downloadUserData);
         }
 
         public void downloadActivityData(string url, string databasePath)
