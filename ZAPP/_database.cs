@@ -27,15 +27,14 @@ namespace ZAPP
         public static string ZAPPDB = "ZAPPDB";
 
         // Constructor
-        public _database(Activity activity)
+        
+        public _database(Activity activity, bool createDB)
         {
             this.activity = activity;
-            this.createAllDatabases();
-        }
-
-        public _database(Activity activity, bool doNotRun)
-        {
-            this.activity = activity;
+            if(createDB)
+            {
+                this.createAllDatabases();
+            }
         }
 
         public static string makeDatabaseName(Activity activity)

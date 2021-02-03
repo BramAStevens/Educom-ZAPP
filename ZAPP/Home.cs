@@ -23,10 +23,8 @@ namespace ZAPP
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Home);
-            string databasePath = _database.makeDatabaseName(this);
 
-            _database db = Config.getDB();
-            result = db.getAllTasks(databasePath); // arraylist
+            result = Config.getAllTasks(); // arraylist
             records = new List<ListRecord>();  // define new list
             foreach (taskRecord value in result) // copy from results into records
             {

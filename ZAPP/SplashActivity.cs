@@ -25,14 +25,7 @@ namespace ZAPP
             base.OnCreate(bundle);
 
             string databasePath = _database.makeDatabaseName(this);
-
-            if (!File.Exists(databasePath))
-            {
-                Config.callDatabase(new _database(this));
-            } else
-            {
-                Config.callDatabase(new _database(this, true));
-            }
+            Config.callDatabase(new _database(this, !File.Exists(databasePath)), databasePath);
             Thread.Sleep(1000);
             StartActivity(typeof(Home));
         }

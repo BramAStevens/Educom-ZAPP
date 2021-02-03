@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections;
 
 namespace ZAPP // bij het aanmaken van splash activity =====> zet me in deze klasse een lijst met gebruikers --> kan je overal aanroepen
     // alles wat ik overal nodig heb kan ik hier zetten en ophalen
@@ -16,12 +17,13 @@ namespace ZAPP // bij het aanmaken van splash activity =====> zet me in deze kla
     {
         //  public static List<T> users { get; set; };
         private static _database db;
-
-        //  private static List<users> users;
-
-        public static void callDatabase(_database _db)
+        private static ArrayList users;
+        private static ArrayList tasks;
+        private static string dbPath;
+        public static void callDatabase(_database _db, string _dbPath)
         {
             db = _db;
+            dbPath = _dbPath;
         }
 
         public static _database getDB()
@@ -29,15 +31,15 @@ namespace ZAPP // bij het aanmaken van splash activity =====> zet me in deze kla
             return db;
         }
         
-        public static void getAllTasks()
+        public static ArrayList getAllTasks()
         {
-
+            return db.getAllTasks(dbPath);
         }
 
-        public static void createUsers()
+        public static ArrayList createUsers()
         {
-           // users = db.getAllUsers(); user list is then filled and u can call this everywhere else in the application.
-           // to call this ==> Config.createUsers;
+           return db.getAllUsers(dbPath);
+ 
            // EG for updateTask ==> loop over activities;
         }
 
