@@ -23,4 +23,36 @@
 		_id ntext
 		)
 	</string>
+	<string name="createTableActivity">
+		create table activity
+		(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		task_id ntext,
+		isCompleted ntext,
+		activityName ntext,
+		_mby ntext,
+		_by ntext,
+		_modified ntext,
+		_created ntext,
+		_id ntext
+		)
+	</string>
+	<string name="createTableTask">
+		create table task
+		(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		client_id ntext,
+		user_id ntext,
+		startTask ntext,
+		stopTask ntext,
+		taskDate ntext,
+		taskName ntext,
+		isCompleted ntext,
+		_mby ntext,
+		_by ntext,
+		_modified ntext,
+		_created ntext,
+		_id ntext
+		)
+	</string>
 </resources>

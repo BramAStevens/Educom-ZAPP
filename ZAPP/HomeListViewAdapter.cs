@@ -43,8 +43,8 @@ namespace ZAPP
                 view = context.LayoutInflater.Inflate(Resource.Layout.ListRow, null);
             }
             view.FindViewById<TextView>(Resource.Id.Text1).Text = item.id;
-            view.FindViewById<TextView>(Resource.Id.Text2).Text = item.code;
-            view.FindViewById<TextView>(Resource.Id.Text3).Text = item.description;
+            view.FindViewById<TextView>(Resource.Id.Text2).Text = item.taskName;
+            view.FindViewById<TextView>(Resource.Id.Text3).Text = item.taskDate;
             return view;
         }
     } // end Class

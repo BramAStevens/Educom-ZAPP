@@ -14,14 +14,20 @@ namespace ZAPP
     class ListRecord
     {
         public string id;
-        public string code;
-        public string description;
+        public string client_id;
+        public string user_id;
+        public string startTask;
+        public string stopTask;
+        public string taskDate;
+        public string taskName;
+        public string isCompleted;
 
-        public ListRecord(int id, string code, string description)
+        public ListRecord(int id, string taskName, string taskDate)
         {
             this.id = id.ToString();
-            this.code = code;
-            this.description = description;
+            this.taskName = taskName;
+            this.taskDate = taskDate;
+            
         }
     }
 }

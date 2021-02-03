@@ -63,6 +63,7 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="activityRecord.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Detail.cs" />
     <Compile Include="Home.cs" />
@@ -72,6 +73,8 @@
     <Compile Include="SplashActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="taskRecord.cs" />
+    <Compile Include="userRecord.cs" />
     <Compile Include="_database.cs" />
   </ItemGroup>
   <ItemGroup>

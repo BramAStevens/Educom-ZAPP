@@ -19,11 +19,20 @@ namespace ZAPP
     {
         // Context definieren
         private Context context;
-        private string educomUrl = "https://webservices.educom.nu/services/first/";
+        private string taskUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/task?token=9d9a3b472d501a972c788077b12fb5/";
         private string userUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/user?token=9d9a3b472d501a972c788077b12fb5/";
+        private string activityUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/activity?token=9d9a3b472d501a972c788077b12fb5/";
+        private string clientUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/client?token=9d9a3b472d501a972c788077b12fb5/";
         private string educomDB;
-        private string userDB;
-        
+        private string ZAPPDB;
+      
+
+        // Constructor
+        public _database(Context context)
+        {
+            this.context = context;
+            this.createAllDatabases();
+        }
 
         // Database maken
         public string createDatabase(string url, string createTableData, string databaseName, Action<string, string> downloadData) // 
@@ -40,8 +49,6 @@ namespace ZAPP
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             string databasePath = Path.Combine(documentsPath, dbname);
 
-            if (!File.Exists(databasePath))
-            {
                 var connectionString = String.Format("Data Source={0};Version=3;", databasePath);
                 using (var conn = new SqliteConnection(connectionString))
                 {
@@ -56,7 +63,7 @@ namespace ZAPP
                     conn.Close();
                 }
                 downloadData(url, databasePath);
-            }
+            
             return databasePath;
         }
 
@@ -64,9 +71,39 @@ namespace ZAPP
         {
             Resources res = this.context.Resources;
 
-            this.educomDB = createDatabase(educomUrl, res.GetString(Resource.String.createTableData), "educomDB", downloadEducomData);
-            this.userDB = createDatabase(userUrl, res.GetString(Resource.String.createTableUser), "userDB", downloadUserData);
-          //  this.userDB = createDatabase(newTableUrl, res.GetString(Resource.String.createTableNew, "userDB", downloadNewTableData));
+            this.educomDB = createDatabase(taskUrl, res.GetString(Resource.String.createTableTask), "educomDB", downloadTaskData);
+            Config.log("before zappdb");
+            this.ZAPPDB = createDatabase(activityUrl, res.GetString(Resource.String.createTableActivity), "ZAPPDB", downloadActivityData);
+            Config.log("before zappdb1");
+            this.ZAPPDB = createDatabase(userUrl, res.GetString(Resource.String.createTableUser), "ZAPPDB", downloadUserData);
+            Config.log("ENDEND");
+
+        }
+
+        public void downloadActivityData(string url, string databasePath)
+        {
+            var webClient = new WebClient();
+            webClient.Encoding = Encoding.UTF8;
+            try
+            {
+                byte[] myDataBuffer = webClient.DownloadData(url);
+                string download = Encoding.ASCII.GetString(myDataBuffer);
+                JsonValue value = JsonValue.Parse(download);
+                var entries = value["entries"];
+
+                foreach (JsonObject item in entries)
+                {
+
+                    Config.log($"{item["task_id"]} = task_id, {item["isCompleted"]} = isCompleted,  {item["activityName"]} = activityName");
+                    this.activityToDatabase(item["task_id"], item["isCompleted"], item["activityName"], databasePath);
+
+                }
+
+            }
+            catch (WebException)
+            {
+
+            }
         }
 
         public void downloadUserData(string url, string databasePath)
@@ -83,7 +120,7 @@ namespace ZAPP
                 foreach (JsonObject item in entries)
                 {
 
-                    Console.WriteLine($"{item["username"]} = {item["password"]}");
+                    Console.WriteLine($"{item["username"]} = username, {item["password"]} = password");
                     this.userToDatabase(item["username"], item["password"], databasePath);
 
                 }
@@ -94,7 +131,7 @@ namespace ZAPP
 
             }
         }
-        public void downloadEducomData(string url, string databasePath)
+        public void downloadTaskData(string url, string databasePath)
         {
             var webClient = new WebClient();
             webClient.Encoding = Encoding.UTF8;
@@ -103,11 +140,12 @@ namespace ZAPP
                 byte[] myDataBuffer = webClient.DownloadData(url);
                 string download = Encoding.ASCII.GetString(myDataBuffer);
                 JsonValue value = JsonValue.Parse(download);
-                foreach (JsonObject item in value)
+                var entries = value["entries"];
+                foreach (JsonObject item in entries)
                 {
-                   
-                        Console.WriteLine($"{item["code"]} = {item["description"]}");
-                        this.dataToDatabase(item["code"], item["description"], databasePath);
+
+                    Config.log($"{item["client_id"]} = client_id, {item["user_id"]} = user_id, {item["startTask"]} = startTask, {item["stopTask"]} = stopTask, {item["taskDate"]} = taskDate, {item["taskName"]} = taskName, {item["isCompleted"]} = isCompleted");
+                    this.taskToDatabase(item["client_id"], item["user_id"], item["startTask"], item["stopTask"], item["taskDate"], item["taskName"], item["isCompleted"], databasePath);
           
                 }
 
@@ -116,6 +154,29 @@ namespace ZAPP
             {
 
             }
+        }
+
+        public void activityToDatabase(string task_id, string isCompleted, string activityName, string dbPath)
+        {
+            var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    // Table data
+                    cmd.CommandText = "INSERT INTO activity (task_id, isCompleted, activityName) VALUES (@task_id, @isCompleted, @activityName)";
+                    cmd.Parameters.Add(new SqliteParameter("@task_id", task_id));
+                    cmd.Parameters.Add(new SqliteParameter("@isCompleted", isCompleted));
+                    cmd.Parameters.Add(new SqliteParameter("@activityName", activityName));
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                    Config.log("ACTIVITY INSERTED INTO DB");
+                }
+                conn.Close();
+            }
+            this.getAllActivities(dbPath);
         }
 
         public void userToDatabase(string username, string password, string dbPath)
@@ -137,9 +198,10 @@ namespace ZAPP
                 }
                 conn.Close();
             }
+            this.getAllUsers(dbPath);
         }
 
-        public void dataToDatabase(string code, string description, string dbPath)
+        public void taskToDatabase(string client_id, string user_id, string startTask, string stopTask, string taskDate, string taskName, string isCompleted, string dbPath)
         {
             var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
@@ -149,9 +211,14 @@ namespace ZAPP
                 using (var cmd = conn.CreateCommand())
                 {
                     // Table data
-                    cmd.CommandText = "INSERT INTO data (code,description) VALUES (@code, @description)";
-                    cmd.Parameters.Add(new SqliteParameter("@code", code));
-                    cmd.Parameters.Add(new SqliteParameter("@description", description));
+                    cmd.CommandText = "INSERT INTO task (client_id, user_id, startTask, stopTask, taskDate, taskName, isCompleted) VALUES (@client_id, @user_id, @startTask, @stopTask, @taskDate, @taskName, @isCompleted)";
+                    cmd.Parameters.Add(new SqliteParameter("@client_id", client_id));
+                    cmd.Parameters.Add(new SqliteParameter("@user_id", user_id));
+                    cmd.Parameters.Add(new SqliteParameter("@startTask", startTask));
+                    cmd.Parameters.Add(new SqliteParameter("@stopTask", stopTask));
+                    cmd.Parameters.Add(new SqliteParameter("@taskDate", taskDate));
+                    cmd.Parameters.Add(new SqliteParameter("@taskName", taskName));
+                    cmd.Parameters.Add(new SqliteParameter("@isCompleted", isCompleted));
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
                     Console.WriteLine("DATA INSERTED TO DATABASE");
@@ -160,63 +227,85 @@ namespace ZAPP
             }
         }
 
-        public ArrayList getAllData(string dbPath)
+        public ArrayList getAllActivities(string dbPath)
         {
-            ArrayList dataRecords = new ArrayList();
+            ArrayList activityRecords = new ArrayList();
             var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM data";
+                    cmd.CommandText = "SELECT * FROM activity";
                     cmd.CommandType = CommandType.Text;
 
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            Console.WriteLine("ALL DATA IS BEING READ");
-                            dataRecords.Add(new dataRecord(reader));
+                            Config.log("ALL ACTIVITIES ARE BEING READ");
+                            activityRecords.Add(new activityRecord(reader));
                         }
                     }
                 }
                 conn.Close();
             }
-            Console.WriteLine("DATA RETURNED TO DATARECORDS");
-            return dataRecords;
-        }
-        // Constructor
-        public _database(Context context)
-        {
-            this.context = context;
-            this.createAllDatabases();
+            Config.log("DATA RETURNED TO ACTIVITYRECORDS");
+            return activityRecords;
         }
 
-    }
-
-    public class dataRecord
-    {
-        public int id;
-        public string code;
-        public string description;
-
-        public dataRecord()
+        public ArrayList getAllUsers(string dbPath)
         {
+            ArrayList userRecords = new ArrayList();
+            var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM user";
+                    cmd.CommandType = CommandType.Text;
 
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Config.log("ALL USERS ARE BEING READ");
+                            userRecords.Add(new userRecord(reader));
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            Config.log("DATA RETURNED TO USERRECORDS");
+            return userRecords;
         }
 
-        public dataRecord(JsonValue record)
+        public ArrayList getAllTasks(string dbPath)
         {
-            this.code = (string)record["code"];
-            this.description = (string)record["description"];
-        }
+            ArrayList taskRecords = new ArrayList();
+            var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM task";
+                    cmd.CommandType = CommandType.Text;
 
-        public dataRecord(SqliteDataReader record)
-        {
-            this.id = (int)(Int64)record["id"];
-            this.code = (string)record["code"];
-            this.description = (string)record["description"];
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Config.log("ALL TASKS ARE BEING READ");
+                            taskRecords.Add(new taskRecord(reader));
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            Console.WriteLine("TASKS RETURNED TO TASKRECORDS");
+            return taskRecords;
         }
     }
 }

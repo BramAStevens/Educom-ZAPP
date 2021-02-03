@@ -31,11 +31,11 @@ namespace ZAPP
             string databasePath = System.IO.Path.Combine(documentsPath, dbname);
 
             _database db = new _database(this);
-            result = db.getAllData(databasePath); // arraylist
+            result = db.getAllTasks(databasePath); // arraylist
             records = new List<ListRecord>();  // define new list
-            foreach (dataRecord value in result) // copy from results into records
+            foreach (taskRecord value in result) // copy from results into records
             {
-                ListRecord row = new ListRecord(value.id, value.code, value.description);
+                ListRecord row = new ListRecord(value.id, value.taskName, value.taskDate);
                 records.Add(row);
             }
             // these 3 lines can be considered as a form in html

@@ -28,18 +28,18 @@ namespace ZAPP
             string databasePath = System.IO.Path.Combine(documentsPath, dbname);
 
             _database db = new _database(this);
-            ArrayList result = db.getAllData(databasePath); // arraylist
+            ArrayList result = db.getAllTasks(databasePath); // arraylist
             List<ListRecord> records = new List<ListRecord>();  // define new list
-            foreach (dataRecord value in result) // copy from results into records
+            foreach (taskRecord value in result) // copy from results into records
             {
-                ListRecord row = new ListRecord(value.id, value.code, value.description);
+                ListRecord row = new ListRecord(value.id, value.taskName, value.taskDate);
                 records.Add(row);
             }
             var id = Intent.GetStringExtra("ID");
             var listRecord = records[Int32.Parse(id)-1];
             FindViewById<TextView>(Resource.Id.textViewId).Text = listRecord.id;
-            FindViewById<TextView>(Resource.Id.textViewCode).Text = listRecord.code;
-            FindViewById<TextView>(Resource.Id.textViewDefinition).Text = listRecord.description;
+            FindViewById<TextView>(Resource.Id.textViewCode).Text = listRecord.taskName;
+            FindViewById<TextView>(Resource.Id.textViewDefinition).Text = listRecord.taskDate;
 
             Console.WriteLine("Got ID: " + id);
         }
