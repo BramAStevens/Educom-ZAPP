@@ -55,8 +55,8 @@
 		_id ntext
 		)
 	</string>
-	<string name="createTableActivity">
-		create table activity
+	<string name="createTableClient">
+		create table client
 		(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		map ntext,

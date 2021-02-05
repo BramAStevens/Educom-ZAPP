@@ -10,19 +10,19 @@ using Android.Views;
 using Android.Widget;
 namespace ZAPP
 {
-    [Activity(Label = "HomeListViewAdapter")]
-    class HomeListViewAdapter : BaseAdapter<Task>
+    [Activity(Label = "UserActivityListViewAdapter")]
+    class UserActivityListViewAdapter : BaseAdapter<UserActivity>
     {
-        List<Task> items;
+        List<UserActivity> items;
         Activity context;
-        public HomeListViewAdapter(Activity context, List<Task> items)
+        public UserActivityListViewAdapter(Activity context, List<UserActivity> items)
         : base()
         {
             this.context = context;
             this.items = items;
         }
 
-        public override Task this[int position]
+        public override UserActivity this[int position]
         {
             get { return items[position]; }
         }
@@ -43,8 +43,8 @@ namespace ZAPP
                 view = context.LayoutInflater.Inflate(Resource.Layout.ListRow, null);
             }
             view.FindViewById<TextView>(Resource.Id.Text1).Text = item.id;
-            view.FindViewById<TextView>(Resource.Id.Text2).Text = item.taskName;
-            view.FindViewById<TextView>(Resource.Id.Text3).Text = item.taskDate;
+            view.FindViewById<TextView>(Resource.Id.Text2).Text = item.activityName;
+            view.FindViewById<TextView>(Resource.Id.Text3).Text = item.isCompleted;
             return view;
         }
     } // end Class

@@ -42,5 +42,15 @@ namespace ZAPP
             this.telephone = (string)record["telephone"];
             this.planning = (string)record["planning"];
         }
+
+        public string getAddress()
+        {
+            return this.address;
+        }
+
+        public string getTelephone()
+        {
+            return this.telephone;
+        }
     }
 }

@@ -16,25 +16,37 @@ namespace ZAPP
     [Activity(Label = "Detail")]
     public class Detail : Activity
     {
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Detail);
-        
-            ArrayList result = Config.getAllTasks(); // arraylist
-            List<ListRecord> records = new List<ListRecord>();  // define new list
-            foreach (taskRecord value in result) // copy from results into records
+
+            clientRecord client = Config.getClientByTask("1"); 
+            
+            FindViewById<TextView>(Resource.Id.textViewCode).Text = client.getAddress();
+            FindViewById<TextView>(Resource.Id.textViewDefinition).Text = client.getTelephone();
+            
+            var id = Intent.GetStringExtra("ID");
+            // var listRecord = result[Int32.Parse(id) - 1];
+            Console.WriteLine("Got ID: " + id);
+            this.makeActivityList();
+        }
+
+        private void makeActivityList()
+        {
+            ArrayList activityList = Config.getActivitiesByTask("1");
+            List<UserActivity> records = new List<UserActivity>(); 
+            foreach (activityRecord value in activityList) // copy from results into records
             {
-                ListRecord row = new ListRecord(value.id, value.taskName, value.taskDate);
+                UserActivity row = new UserActivity(value.id, value.activityName, value.isCompleted);
                 records.Add(row);
             }
-            var id = Intent.GetStringExtra("ID");
-            var listRecord = records[Int32.Parse(id)-1];
-            FindViewById<TextView>(Resource.Id.textViewId).Text = listRecord.id;
-            FindViewById<TextView>(Resource.Id.textViewCode).Text = listRecord.taskName;
-            FindViewById<TextView>(Resource.Id.textViewDefinition).Text = listRecord.taskDate;
+            // these 3 lines can be considered as a form in html
 
-            Console.WriteLine("Got ID: " + id);
+            ListView listView = FindViewById<ListView>(Resource.Id.OverviewDetail); // link to overview in xml
+            listView.Adapter = new UserActivityListViewAdapter(this, records); // contains all stuff inside of listView => records are added here
+          //  listView.ItemClick += OnListItemClick; // when user clicks on list , the click is executed
         }
     }
 }

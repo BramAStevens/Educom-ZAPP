@@ -23,5 +23,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/textViewDefinition"/>
 
+    <ListView
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/OverviewDetail"/>
 
 </LinearLayout>

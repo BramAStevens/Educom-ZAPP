@@ -17,18 +17,18 @@ namespace ZAPP
     class Home : Activity
     {
         ListView listView;
-        List<ListRecord> records;
-        ArrayList result;
+        List<Task> records;
+        
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Home);
 
-            result = Config.getAllTasks(); // arraylist
-            records = new List<ListRecord>();  // define new list
-            foreach (taskRecord value in result) // copy from results into records
+            ArrayList taskList = Config.getTasksByUser("1"); 
+            records = new List<Task>();  // define new list
+            foreach (taskRecord value in taskList) // copy from results into records
             {
-                ListRecord row = new ListRecord(value.id, value.taskName, value.taskDate);
+                Task row = new Task(value.id, value.taskName, value.taskDate);
                 records.Add(row);
             }
             // these 3 lines can be considered as a form in html

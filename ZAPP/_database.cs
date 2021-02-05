@@ -77,7 +77,7 @@ namespace ZAPP
             createDatabase(taskUrl, res.GetString(Resource.String.createTableTask), downloadTaskData);
             createDatabase(activityUrl, res.GetString(Resource.String.createTableActivity), downloadActivityData);
             createDatabase(userUrl, res.GetString(Resource.String.createTableUser), downloadUserData);
-            createDatabase(clientUrl, res.GetString(Resource.String.createTableActivity), downloadClientData);
+            createDatabase(clientUrl, res.GetString(Resource.String.createTableClient), downloadClientData);
         }
 
         public void downloadClientData(string url, string databasePath)
@@ -105,6 +105,7 @@ namespace ZAPP
 
             }
         }
+
         public void downloadActivityData(string url, string databasePath)
         {
             var webClient = new WebClient();
@@ -119,7 +120,7 @@ namespace ZAPP
                 foreach (JsonObject item in entries)
                 {
 
-                    Config.log($"{item["task_id"]} = task_id, {item["isCompleted"]} = isCompleted,  {item["activityName"]} = activityName");
+                  //   Config.log($"{item["task_id"]} = task_id, {item["isCompleted"]} = isCompleted,  {item["activityName"]} = activityName");
                     this.activityToDatabase(item["task_id"], item["isCompleted"], item["activityName"], databasePath);
 
                 }
@@ -169,7 +170,7 @@ namespace ZAPP
                 foreach (JsonObject item in entries)
                 {
 
-                    Config.log($"{item["client_id"]} = client_id, {item["user_id"]} = user_id, {item["startTask"]} = startTask, {item["stopTask"]} = stopTask, {item["taskDate"]} = taskDate, {item["taskName"]} = taskName, {item["isCompleted"]} = isCompleted");
+                   // Config.log($"{item["client_id"]} = client_id, {item["user_id"]} = user_id, {item["startTask"]} = startTask, {item["stopTask"]} = stopTask, {item["taskDate"]} = taskDate, {item["taskName"]} = taskName, {item["isCompleted"]} = isCompleted");
                     this.taskToDatabase(item["client_id"], item["user_id"], item["startTask"], item["stopTask"], item["taskDate"], item["taskName"], item["isCompleted"], databasePath);
           
                 }
@@ -225,7 +226,6 @@ namespace ZAPP
                 }
                 conn.Close();
             }
-            this.getAllActivities(dbPath);
         }
 
         public void userToDatabase(string username, string password, string dbPath)
@@ -303,6 +303,69 @@ namespace ZAPP
             return activityRecords;
         }
 
+        public clientRecord getClientByTask(string dbPath, string client_id)
+        {
+            clientRecord record = null;
+            var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM client WHERE (id) = @client_id";
+                    cmd.Parameters.Add(new SqliteParameter("@client_id", client_id));
+                    cmd.CommandType = CommandType.Text;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        int i = 0;
+                        while (reader.Read()) 
+                        {
+                            Config.log("CLIENTBYTASK ARE BEING READ");
+                            i++;
+                            record = new clientRecord(reader);
+                        }
+                        if (i>1)
+                        {
+                            Config.log("ERROR MORE CLIENT RECORDS THAN EXPECTED!!!!!!!!");
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            Config.log("CLIENT RETURNED TO TASKRECORDS");
+            return record;
+        }
+        public ArrayList getActivitiesByTask(string dbPath, string task_id)
+        {
+            ArrayList activityRecords = new ArrayList();
+            var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM activity WHERE (task_id) = @task_id";
+                    cmd.Parameters.Add(new SqliteParameter("@task_id", task_id));
+                    cmd.CommandType = CommandType.Text;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Config.log("ACTIVITIESBYTASK ARE BEING READ");
+                            
+                            activityRecords.Add(new activityRecord(reader));
+                           
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            Config.log("ACTIVITIESBYTASK RETURNED TO ACTIVITYRECORDS");
+            return activityRecords;
+        }
+
         public ArrayList getAllUsers(string dbPath)
         {
             ArrayList userRecords = new ArrayList();
@@ -328,9 +391,10 @@ namespace ZAPP
             }
             Config.log("DATA RETURNED TO USERRECORDS");
             return userRecords;
+            
         }
 
-        public ArrayList getAllTasks(string dbPath)
+        public ArrayList getTasksByUser(string dbPath, string user_id)
         {
             ArrayList taskRecords = new ArrayList();
             var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
@@ -339,7 +403,8 @@ namespace ZAPP
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM task";
+                    cmd.CommandText = "SELECT * FROM task WHERE (user_id) = @user_id";
+                    cmd.Parameters.Add(new SqliteParameter("@user_id", user_id));
                     cmd.CommandType = CommandType.Text;
 
                     using (var reader = cmd.ExecuteReader())
@@ -353,10 +418,10 @@ namespace ZAPP
                 }
                 conn.Close();
             }
-            Console.WriteLine("TASKS RETURNED TO TASKRECORDS");
+            Config.log("TASKS RETURNED TO TASKRECORDS");
             return taskRecords;
         }
-
+       
         public ArrayList getAllClients(string dbPath)
         {
             ArrayList clientRecords = new ArrayList();
@@ -380,7 +445,7 @@ namespace ZAPP
                 }
                 conn.Close();
             }
-            Console.WriteLine("CLIENT RETURNED TO CLIENTRECORDS");
+            Config.log("CLIENT RETURNED TO CLIENTRECORDS");
             return clientRecords;
         }
     }

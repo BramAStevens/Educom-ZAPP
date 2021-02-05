@@ -14,12 +14,8 @@ namespace ZAPP
 {
     static class Config
     {
-        //  public static List<T> users { get; set; };
+       
         private static _database db;
-        private static ArrayList users;
-        private static ArrayList tasks;
-        private static ArrayList clients;
-        private static ArrayList activities;
         private static string dbPath;
         public static void callDatabase(_database _db, string _dbPath)
         {
@@ -29,17 +25,33 @@ namespace ZAPP
 
         public static _database getDB()
         {
-            return db;
+          return db;
         }
-        
-        public static ArrayList getAllTasks()
+    
+        public static clientRecord getClientByTask(string client_id) // for detail page (map and address)
         {
-            return db.getAllTasks(dbPath);
+            return db.getClientByTask(dbPath, client_id);
+        }
+
+        public static ArrayList getActivitiesByTask(string task_id) // to show all activities per task in detail // WORKS CORRECTLY
+        {
+
+            return db.getActivitiesByTask(dbPath, task_id);
+            // loop here 
+          //  tasks = db.getAllactivities
+            // loop over it in other functions with foreach
+
+        }
+
+        public static ArrayList getTasksByUser(string user_id) // WORKS CORRECTLY
+        {
+            return db.getTasksByUser(dbPath, user_id);
         }
 
         public static ArrayList getAllActivities() // is still hardcoded in _database class
         {
-            return db.getAllActivities(dbPath);
+           ArrayList activities = db.getAllActivities(dbPath);
+           return(activities);
         }
 
         public static ArrayList getAllUsers() // is still hardcoded in _database class

@@ -36,6 +36,7 @@ namespace ZAPP
             this.user_id = (string)record["user_id"];
             this.startTask = (string)record["startTask"];
             this.stopTask = (string)record["stopTask"];
+            this.taskName = (string)record["taskName"];
             this.taskDate = (string)record["taskName"];
             this.isCompleted = (string)record["isCompleted"];
         }
@@ -47,6 +48,7 @@ namespace ZAPP
             this.user_id = (string)record["user_id"];
             this.startTask = (string)record["startTask"];
             this.stopTask = (string)record["stopTask"];
+            this.taskName = (string)record["taskName"];
             this.taskDate = (string)record["taskName"];
             this.isCompleted = (string)record["isCompleted"];
         }

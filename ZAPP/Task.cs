@@ -11,7 +11,7 @@ using System.Text;
 
 namespace ZAPP
 {
-    class ListRecord
+    class Task
     {
         public string id;
         public string client_id;
@@ -22,7 +22,7 @@ namespace ZAPP
         public string taskDate;
         public string isCompleted;
 
-        public ListRecord(int id, string taskName, string taskDate)
+        public Task(int id, string taskName, string taskDate)
         {
             this.id = id.ToString();
             this.taskName = taskName;
