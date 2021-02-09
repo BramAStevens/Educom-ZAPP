@@ -303,9 +303,9 @@ namespace ZAPP
             return activityRecords;
         }
 
-        public ClientRecord getClientByTask(string dbPath, string client_id)
+        public ClientRecord getClient(string dbPath, string client_id)
         {
-            ClientRecord record = null;
+            ClientRecord client = null;
             var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
             {
@@ -323,18 +323,22 @@ namespace ZAPP
                         {
                             Config.log("CLIENTBYTASK ARE BEING READ");
                             i++;
-                            record = new ClientRecord(reader);
+                            client = new ClientRecord(reader);
                         }
                         if (i>1)
                         {
                             Config.log("ERROR MORE CLIENT RECORDS THAN EXPECTED!!!!!!!!");
+                        }
+                        if (client == null)
+                        {
+                            throw new ArgumentException("No such client! ", client_id);
                         }
                     }
                 }
                 conn.Close();
             }
             Config.log("CLIENT RETURNED TO TASKRECORDS");
-            return record;
+            return client;
         }
         public ArrayList getActivitiesByTask(string dbPath, string task_id)
         {

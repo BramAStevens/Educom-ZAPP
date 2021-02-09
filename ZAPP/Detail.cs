@@ -27,18 +27,15 @@ namespace ZAPP
             SetContentView(Resource.Layout.Detail);
 
             makeTabs();
-
-            string id = Intent.GetStringExtra("ID");
-  
-            displayClientForTask(id);
             
-            this.makeActivityList();
+            displayClientForTask(Intent.GetStringExtra("CLIENT_ID"));
+            makeActivityList(Intent.GetStringExtra("TASK_ID"));
         }
 
         private Android.Graphics.Bitmap GetImageBitmapFromUrl(string url)
         {
             Android.Graphics.Bitmap imageBitmap = null;
-
+            
             using (var webClient = new WebClient())
             {
                 var imageBytes = webClient.DownloadData(url);
@@ -51,9 +48,23 @@ namespace ZAPP
             return imageBitmap;
         }
 
-        private void displayClientForTask(string taskId)
+        private void displayClientForTask(string clientId)
         {
-            ClientRecord client = Config.getClientByTask(taskId);
+            ClientRecord client = null;
+            
+            try
+            {
+                client = Config.getClient(clientId);
+            }
+            catch (Exception ex)
+            {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.SetMessage("Inconsistent database, non-existent client");
+                Dialog dialog = alert.Create();
+                dialog.Show();
+                return;
+            }
+            
             var imageBitmap = GetImageBitmapFromUrl(client.getMap());
 
             FindViewById<TextView>(Resource.Id.textViewCode).Text = client.getAddress();
@@ -78,9 +89,10 @@ namespace ZAPP
             spec.SetIndicator("Map");
             tabs.AddTab(spec);
         }
-        private void makeActivityList()
+        private void makeActivityList(string taskId)
         {
-            ArrayList activityList = Config.getActivitiesByTask("1");
+            
+            ArrayList activityList = Config.getActivitiesByTask(taskId);
             List<UserActivity> records = new List<UserActivity>(); 
             foreach (activityRecord value in activityList) // copy from results into records
             {

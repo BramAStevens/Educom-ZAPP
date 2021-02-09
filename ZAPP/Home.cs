@@ -13,7 +13,6 @@ using Android.Content.Res;
 
 namespace ZAPP
 {
-
     class Home : Activity
     {
         ListView listView;
@@ -28,21 +27,21 @@ namespace ZAPP
             taskRecords = new List<Task>();  // define new list
             foreach (TaskRecord value in taskList) // copy from results into records
             {
-                Task row = new Task(value.id, value.taskName, value.taskDate);
+                Task row = new Task(value.id, value.client_id, value.taskName, value.taskDate);
                 taskRecords.Add(row);
             }
             // these 3 lines can be considered as a form in html
             listView = FindViewById<ListView>(Resource.Id.Overview); // link to overview in xml
             listView.Adapter = new HomeListViewAdapter(this, taskRecords); // contains all stuff inside of listView => records are added here
             listView.ItemClick += OnListItemClick; // when user clicks on list , the click is executed
-            
 
         }
         protected void OnListItemClick(object sender, Android.Widget.AdapterView.ItemClickEventArgs e)
         {
             var selectedTask = taskRecords[e.Position];
             var intent = new Intent(this, typeof(Detail));
-            intent.PutExtra("ID", selectedTask.id.ToString()); // puts info as to which record was selected in the communcication of android
+            intent.PutExtra("CLIENT_ID", selectedTask.client_id.ToString()); // puts info as to which record was selected in the communcication of android
+            intent.PutExtra("TASK_ID", selectedTask.id.ToString()); 
             StartActivityForResult(intent, 0); // sends you to the page
         }
     }

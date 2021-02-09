@@ -17,7 +17,6 @@ namespace ZAPP
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true,
    NoHistory = true)]
     
-   
     public class SplashActivity : Activity
     {
         protected override void OnCreate(Bundle bundle)

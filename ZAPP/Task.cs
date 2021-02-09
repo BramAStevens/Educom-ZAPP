@@ -22,9 +22,10 @@ namespace ZAPP
         public string taskDate;
         public string isCompleted;
 
-        public Task(int id, string taskName, string taskDate)
+        public Task(int id, string client_id, string taskName, string taskDate)
         {
             this.id = id.ToString();
+            this.client_id = client_id;
             this.taskName = taskName;
             this.taskDate = taskDate;
             

@@ -28,9 +28,9 @@ namespace ZAPP
           return db;
         }
     
-        public static ClientRecord getClientByTask(string client_id) // for detail page (map and address)
+        public static ClientRecord getClient(string clientId) // for detail page (map and address)
         {
-            return db.getClientByTask(dbPath, client_id);
+            return db.getClient(dbPath, clientId);
         }
 
         public static ArrayList getActivitiesByTask(string task_id) // to show all activities per task in detail // WORKS CORRECTLY
