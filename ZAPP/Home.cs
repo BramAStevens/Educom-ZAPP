@@ -18,13 +18,13 @@ namespace ZAPP
     {
         ListView listView;
         List<Task> records;
-        
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Home);
 
-            ArrayList taskList = Config.getTasksByUser("1"); 
+            ArrayList taskList = Config.getTasksByUser("1");
             records = new List<Task>();  // define new list
             foreach (taskRecord value in taskList) // copy from results into records
             {

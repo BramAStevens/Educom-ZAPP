@@ -22,6 +22,21 @@ namespace ZAPP
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Detail);
 
+            TabHost tabs = (TabHost)FindViewById(Resource.Id.tabhost);
+            tabs.Setup();
+            TabHost.TabSpec spec = tabs.NewTabSpec("tag1");
+            spec.SetContent(Resource.Id.tab1);
+            spec.SetIndicator("Tasks");
+            tabs.AddTab(spec);
+            spec = tabs.NewTabSpec("tag2");
+            spec.SetContent(Resource.Id.tab2);
+            spec.SetIndicator("Address");
+            tabs.AddTab(spec);
+            spec = tabs.NewTabSpec("tag3");
+            spec.SetContent(Resource.Id.tab3);
+            spec.SetIndicator("Map");
+            tabs.AddTab(spec);
+
             clientRecord client = Config.getClientByTask("1"); 
             
             FindViewById<TextView>(Resource.Id.textViewCode).Text = client.getAddress();

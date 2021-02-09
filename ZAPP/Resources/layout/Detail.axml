@@ -5,7 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <TextView
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="300px"
+        android:layout_marginTop="100px"
+        android:src="@drawable/icon"/>
+    <TabHost
+        android:id="@+id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="475.0dp">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/linearLayout1">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="382.0dp"
+                android:layout_height="81.0dp"
+                android:layout_marginBottom="0.0dp" />
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <LinearLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minWidth="25px"
+                    android:minHeight="25px">
+                                <ListView
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/OverviewDetail"/>
+  
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/tab2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                     <TextView
       
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,12 +66,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textViewDefinition"/>
+      
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/tab3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <Button
+                        android:id="@+id/button"
+                        android:layout_width="match_parent"
+                        android:layout_height="404.0dp"
+                        android:text="tab3" />
+              
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+    <Button
+        android:text="Check-in / Check-out"
+        android:layout_width="match_parent"
+        android:layout_height="60.0dp"
+        android:id="@+id/containedButton"
+        android:layout_marginBottom="0.0dp"
+        android:layout_marginTop="0.0dp"
+       
+   />
 
-    <ListView
-        android:minWidth="25px"
-        android:minHeight="25px"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/OverviewDetail"/>
+</LinearLayout>  
+   
 
-</LinearLayout>
+
+
