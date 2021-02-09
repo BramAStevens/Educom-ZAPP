@@ -13,7 +13,7 @@ using System.Text;
 
 namespace ZAPP
 {
-    class clientRecord
+    class ClientRecord
     {
         public int id;
         public string map;
@@ -21,12 +21,12 @@ namespace ZAPP
         public string telephone;
         public string planning;
 
-        public clientRecord()
+        public ClientRecord()
         {
 
         }
 
-        public clientRecord(JsonValue record)
+        public ClientRecord(JsonValue record)
         {
             this.map = (string)record["map"];
             this.address = (string)record["address"];
@@ -34,7 +34,7 @@ namespace ZAPP
             this.planning = (string)record["planning"];
         }
 
-        public clientRecord(SqliteDataReader record)
+        public ClientRecord(SqliteDataReader record)
         {
             this.id = (int)(Int64)record["id"];
             this.map = (string)record["map"];
@@ -51,6 +51,11 @@ namespace ZAPP
         public string getTelephone()
         {
             return this.telephone;
+        }
+
+        public string getMap()
+        {
+            return this.map;
         }
     }
 }

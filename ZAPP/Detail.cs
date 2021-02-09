@@ -1,14 +1,18 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Content.Res;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Java.Net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace ZAPP
@@ -16,12 +20,49 @@ namespace ZAPP
     [Activity(Label = "Detail")]
     public class Detail : Activity
     {
-
+        
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Detail);
 
+            makeTabs();
+
+            string id = Intent.GetStringExtra("ID");
+  
+            displayClientForTask(id);
+            
+            this.makeActivityList();
+        }
+
+        private Android.Graphics.Bitmap GetImageBitmapFromUrl(string url)
+        {
+            Android.Graphics.Bitmap imageBitmap = null;
+
+            using (var webClient = new WebClient())
+            {
+                var imageBytes = webClient.DownloadData(url);
+                if (imageBytes != null && imageBytes.Length > 0)
+                {
+                    imageBitmap = BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
+                }
+            }
+
+            return imageBitmap;
+        }
+
+        private void displayClientForTask(string taskId)
+        {
+            ClientRecord client = Config.getClientByTask(taskId);
+            var imageBitmap = GetImageBitmapFromUrl(client.getMap());
+
+            FindViewById<TextView>(Resource.Id.textViewCode).Text = client.getAddress();
+            FindViewById<TextView>(Resource.Id.textViewDefinition).Text = client.getTelephone();
+            FindViewById<ImageView>(Resource.Id.imageViewMap).SetImageBitmap(imageBitmap);
+        }
+
+        private void makeTabs()
+        {
             TabHost tabs = (TabHost)FindViewById(Resource.Id.tabhost);
             tabs.Setup();
             TabHost.TabSpec spec = tabs.NewTabSpec("tag1");
@@ -36,18 +77,7 @@ namespace ZAPP
             spec.SetContent(Resource.Id.tab3);
             spec.SetIndicator("Map");
             tabs.AddTab(spec);
-
-            clientRecord client = Config.getClientByTask("1"); 
-            
-            FindViewById<TextView>(Resource.Id.textViewCode).Text = client.getAddress();
-            FindViewById<TextView>(Resource.Id.textViewDefinition).Text = client.getTelephone();
-            
-            var id = Intent.GetStringExtra("ID");
-            // var listRecord = result[Int32.Parse(id) - 1];
-            Console.WriteLine("Got ID: " + id);
-            this.makeActivityList();
         }
-
         private void makeActivityList()
         {
             ArrayList activityList = Config.getActivitiesByTask("1");

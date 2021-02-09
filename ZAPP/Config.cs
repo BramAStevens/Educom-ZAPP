@@ -28,7 +28,7 @@ namespace ZAPP
           return db;
         }
     
-        public static clientRecord getClientByTask(string client_id) // for detail page (map and address)
+        public static ClientRecord getClientByTask(string client_id) // for detail page (map and address)
         {
             return db.getClientByTask(dbPath, client_id);
         }
@@ -43,7 +43,7 @@ namespace ZAPP
 
         }
 
-        public static ArrayList getTasksByUser(string user_id) // WORKS CORRECTLY
+        public static List<TaskRecord> getTasksByUser(string user_id) // WORKS CORRECTLY
         {
             return db.getTasksByUser(dbPath, user_id);
         }
@@ -63,7 +63,7 @@ namespace ZAPP
 
         // for task & activity for example ==> make sure that every task has a list of activities //
 
-        public static ArrayList getAllClients() // is still hardcoded in _database class
+        public static List<ClientRecord> getAllClients() // is still hardcoded in _database class
         {
             return db.getAllClients(dbPath);
         }

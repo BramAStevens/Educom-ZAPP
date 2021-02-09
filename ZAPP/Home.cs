@@ -17,31 +17,32 @@ namespace ZAPP
     class Home : Activity
     {
         ListView listView;
-        List<Task> records;
+        List<Task> taskRecords;
 
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Home);
 
-            ArrayList taskList = Config.getTasksByUser("1");
-            records = new List<Task>();  // define new list
-            foreach (taskRecord value in taskList) // copy from results into records
+            List<TaskRecord> taskList = Config.getTasksByUser("1");
+            taskRecords = new List<Task>();  // define new list
+            foreach (TaskRecord value in taskList) // copy from results into records
             {
                 Task row = new Task(value.id, value.taskName, value.taskDate);
-                records.Add(row);
+                taskRecords.Add(row);
             }
             // these 3 lines can be considered as a form in html
             listView = FindViewById<ListView>(Resource.Id.Overview); // link to overview in xml
-            listView.Adapter = new HomeListViewAdapter(this, records); // contains all stuff inside of listView => records are added here
+            listView.Adapter = new HomeListViewAdapter(this, taskRecords); // contains all stuff inside of listView => records are added here
             listView.ItemClick += OnListItemClick; // when user clicks on list , the click is executed
+            
 
         }
         protected void OnListItemClick(object sender, Android.Widget.AdapterView.ItemClickEventArgs e)
         {
-            var selectedRecord = records[e.Position];
+            var selectedTask = taskRecords[e.Position];
             var intent = new Intent(this, typeof(Detail));
-            intent.PutExtra("ID", selectedRecord.id.ToString()); // puts info as to which record was selected in the communcication of android
+            intent.PutExtra("ID", selectedTask.id.ToString()); // puts info as to which record was selected in the communcication of android
             StartActivityForResult(intent, 0); // sends you to the page
         }
     }

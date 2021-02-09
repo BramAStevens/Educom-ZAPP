@@ -303,9 +303,9 @@ namespace ZAPP
             return activityRecords;
         }
 
-        public clientRecord getClientByTask(string dbPath, string client_id)
+        public ClientRecord getClientByTask(string dbPath, string client_id)
         {
-            clientRecord record = null;
+            ClientRecord record = null;
             var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
             {
@@ -323,7 +323,7 @@ namespace ZAPP
                         {
                             Config.log("CLIENTBYTASK ARE BEING READ");
                             i++;
-                            record = new clientRecord(reader);
+                            record = new ClientRecord(reader);
                         }
                         if (i>1)
                         {
@@ -394,9 +394,9 @@ namespace ZAPP
             
         }
 
-        public ArrayList getTasksByUser(string dbPath, string user_id)
+        public List<TaskRecord> getTasksByUser(string dbPath, string user_id)
         {
-            ArrayList taskRecords = new ArrayList();
+            List<TaskRecord> taskRecords = new List<TaskRecord>();
             var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
             {
@@ -412,7 +412,7 @@ namespace ZAPP
                         while (reader.Read())
                         {
                             Config.log("ALL TASKS ARE BEING READ");
-                            taskRecords.Add(new taskRecord(reader));
+                            taskRecords.Add(new TaskRecord(reader));
                         }
                     }
                 }
@@ -422,9 +422,9 @@ namespace ZAPP
             return taskRecords;
         }
        
-        public ArrayList getAllClients(string dbPath)
+        public List<ClientRecord> getAllClients(string dbPath)
         {
-            ArrayList clientRecords = new ArrayList();
+            List<ClientRecord> clientRecords = new List<ClientRecord>();
             var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
             {
@@ -439,7 +439,7 @@ namespace ZAPP
                         while (reader.Read())
                         {
                             Config.log("ALL CLIENTS ARE BEING READ");
-                            clientRecords.Add(new clientRecord(reader));
+                            clientRecords.Add(new ClientRecord(reader));
                         }
                     }
                 }

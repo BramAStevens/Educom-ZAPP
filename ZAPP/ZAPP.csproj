@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="activityRecord.cs" />
-    <Compile Include="clientRecord.cs" />
+    <Compile Include="ClientRecord.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Detail.cs" />
     <Compile Include="Home.cs" />
@@ -74,7 +74,7 @@
     <Compile Include="SplashActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="taskRecord.cs" />
+    <Compile Include="TaskRecord.cs" />
     <Compile Include="UserActivity.cs" />
     <Compile Include="UserActivityListViewAdapter.cs" />
     <Compile Include="userRecord.cs" />

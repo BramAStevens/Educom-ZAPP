@@ -9,12 +9,16 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="300px"
-        android:layout_marginTop="100px"
+        android:layout_marginTop="70px"
         android:src="@drawable/icon"/>
     <TabHost
         android:id="@+id/tabhost"
+        
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px"
         android:layout_width="match_parent"
-        android:layout_height="475.0dp">
+        android:layout_height="475.0dp"
+        >
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
@@ -23,13 +27,19 @@
 
             <TabWidget
                 android:id="@android:id/tabs"
-                android:layout_width="382.0dp"
+                android:layout_width="match_parent"
                 android:layout_height="81.0dp"
-                android:layout_marginBottom="0.0dp" />
+                android:layout_marginBottom="0.0dp"
+                android:layout_marginLeft="10.5dp"
+                android:layout_marginRight="10.5dp" />
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:background="@android:drawable/screen_background_light_transparent"
+                android:backgroundTint="#99FFFFFF"
+                android:layout_height="fill_parent"
+                >
+
                 <LinearLayout
                     android:id="@+id/tab1"
                     android:layout_width="match_parent"
@@ -72,11 +82,10 @@
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="match_parent"
-                        android:layout_height="404.0dp"
-                        android:text="tab3" />
+                    <ImageView
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:id="@+id/imageViewMap"/>
               
                 </LinearLayout>
             </FrameLayout>
@@ -85,10 +94,12 @@
     <Button
         android:text="Check-in / Check-out"
         android:layout_width="match_parent"
-        android:layout_height="60.0dp"
+        android:layout_height="match_parent"
         android:id="@+id/containedButton"
         android:layout_marginBottom="0.0dp"
         android:layout_marginTop="0.0dp"
+        android:layout_marginLeft="30px"
+        android:layout_marginRight="30px"
        
    />
 

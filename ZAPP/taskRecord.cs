@@ -13,7 +13,7 @@ using System.Text;
 
 namespace ZAPP
 {
-    class taskRecord
+    class TaskRecord
     {
         public int id;
         public string client_id;
@@ -25,12 +25,12 @@ namespace ZAPP
         public string isCompleted;
 
 
-        public taskRecord()
+        public TaskRecord()
         {
 
         }
 
-        public taskRecord(JsonValue record)
+        public TaskRecord(JsonValue record)
         {
             this.client_id = (string)record["client_id"];
             this.user_id = (string)record["user_id"];
@@ -41,7 +41,7 @@ namespace ZAPP
             this.isCompleted = (string)record["isCompleted"];
         }
 
-        public taskRecord(SqliteDataReader record)
+        public TaskRecord(SqliteDataReader record)
         {
             this.id = (int)(Int64)record["id"];
             this.client_id = (string)record["client_id"];
