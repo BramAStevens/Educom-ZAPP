@@ -106,7 +106,8 @@
         android:layout_marginTop="0.0dp"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"
-       
+        android:textColor="#FFE8E8" 
+        android:backgroundTint="#99FFFFFF"
    />
 
 </LinearLayout>  

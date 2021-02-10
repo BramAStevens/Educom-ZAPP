@@ -21,9 +21,7 @@ namespace ZAPP
         {
             this.context = context;
             this.items = items;
-       
         }
-
         public override Task this[int position]
         {
             get { return items[position]; }

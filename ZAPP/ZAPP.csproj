@@ -63,22 +63,22 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivityRecord.cs" />
-    <Compile Include="Client.cs" />
-    <Compile Include="ClientRecord.cs" />
+    <Compile Include="Resources\_Records\ActivityRecord.cs" />
+    <Compile Include="Resources\_Model\Client.cs" />
+    <Compile Include="Resources\_Records\ClientRecord.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Detail.cs" />
     <Compile Include="Home.cs" />
-    <Compile Include="HomeListViewAdapter.cs" />
-    <Compile Include="Task.cs" />
+    <Compile Include="Resources\_Adapters\HomeListViewAdapter.cs" />
+    <Compile Include="Resources\_Model\Task.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="SplashActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TaskRecord.cs" />
-    <Compile Include="UserActivity.cs" />
-    <Compile Include="UserActivityListViewAdapter.cs" />
-    <Compile Include="UserRecord.cs" />
+    <Compile Include="Resources\_Records\TaskRecord.cs" />
+    <Compile Include="Resources\_Model\UserActivity.cs" />
+    <Compile Include="Resources\_Adapters\UserActivityListViewAdapter.cs" />
+    <Compile Include="Resources\_Records\UserRecord.cs" />
     <Compile Include="_database.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +161,11 @@
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\loginButton.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

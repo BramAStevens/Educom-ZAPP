@@ -23,9 +23,10 @@ namespace ZAPP
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Home);
+            Login l = new Login();
 
             List<TaskRecord> taskList = Config.getTasksByUser("1");
-           
+          //  List<TaskRecord> taskList = Config.getTasksByUser(l.userId.ToString());
             taskRecords = new List<Task>();  // define new list
 
             foreach (TaskRecord value in taskList) // copy from results into records

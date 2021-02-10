@@ -42,5 +42,10 @@ namespace ZAPP
         {
             return this.password;
         }
+
+        public int getId()
+        {
+            return this.id;
+        }
     }
 }

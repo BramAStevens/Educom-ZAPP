@@ -12,9 +12,9 @@ using System.Text;
 namespace ZAPP
 {
 
-    class Login : Activity
+    public class Login : Activity
     {
-        
+       
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -35,12 +35,12 @@ namespace ZAPP
                 goToHome();
             };
         }
-
+        public int userId;
         protected void login(string username, string password)
         {
             UserRecord user = Config.getUserByUsername(username);
             string storedPassword = user.getPassword();
-
+            userId = user.getId();
             if (password == storedPassword)
             {
                 goToHome();
@@ -54,7 +54,7 @@ namespace ZAPP
         }
         protected void goToHome()
         {
-        StartActivity(typeof(Home));
+                StartActivity(typeof(Home));
         }
     }
 } 
