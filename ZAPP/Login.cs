@@ -23,12 +23,17 @@ namespace ZAPP
           EditText editUsername = FindViewById<EditText>(Resource.Id.editUsername);
           EditText editPassword = FindViewById<EditText>(Resource.Id.editPassword);
           Button loginButton = FindViewById<Button>(Resource.Id.loginButton);
+          Button skipButton = FindViewById<Button>(Resource.Id.skipButton);
 
             loginButton.Click += delegate
             {
                 login(editUsername.Text, editPassword.Text);
             };
-   
+
+            skipButton.Click += delegate
+            {
+                goToHome();
+            };
         }
 
         protected void login(string username, string password)
@@ -38,11 +43,18 @@ namespace ZAPP
 
             if (password == storedPassword)
             {
-                StartActivity(typeof(Home));
+                goToHome();
             } else
             {
-                Config.log("WRONG PASSWORD");
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.SetMessage("Wrong login credentials!");
+                Dialog dialog = alert.Create();
+                dialog.Show();
             }
+        }
+        protected void goToHome()
+        {
+        StartActivity(typeof(Home));
         }
     }
 } 

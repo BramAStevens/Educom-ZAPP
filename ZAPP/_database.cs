@@ -464,8 +464,6 @@ namespace ZAPP
             return taskRecords;
         }
 
-        
-
         public List<ClientRecord> getAllClients(string dbPath)
         {
             List<ClientRecord> clientRecords = new List<ClientRecord>();

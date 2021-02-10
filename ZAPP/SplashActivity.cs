@@ -24,7 +24,7 @@ namespace ZAPP
 
             string databasePath = _database.makeDatabaseName(this);
             Config.callDatabase(new _database(this, !File.Exists(databasePath)), databasePath);
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             StartActivity(typeof(Login));
         }
     }
