@@ -37,7 +37,7 @@ namespace ZAPP
             this.startTask = (string)record["startTask"];
             this.stopTask = (string)record["stopTask"];
             this.taskName = (string)record["taskName"];
-            this.taskDate = (string)record["taskName"];
+            this.taskDate = (string)record["taskDate"];
             this.isCompleted = (string)record["isCompleted"];
         }
 
@@ -49,7 +49,7 @@ namespace ZAPP
             this.startTask = (string)record["startTask"];
             this.stopTask = (string)record["stopTask"];
             this.taskName = (string)record["taskName"];
-            this.taskDate = (string)record["taskName"];
+            this.taskDate = (string)record["taskDate"];
             this.isCompleted = (string)record["isCompleted"];
         }
     }

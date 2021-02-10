@@ -36,7 +36,9 @@ android:layout_height="wrap_content"
 android:textSize="14dip"
 android:textColor="#000000"
 android:paddingLeft="10dip"
-android:textStyle="italic" />
+android:textStyle="italic"
+android:gravity="right"/>
+
 </LinearLayout>
 </LinearLayout>
 </LinearLayout>

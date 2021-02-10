@@ -14,12 +14,14 @@ namespace ZAPP
     class HomeListViewAdapter : BaseAdapter<Task>
     {
         List<Task> items;
+        
         Activity context;
         public HomeListViewAdapter(Activity context, List<Task> items)
         : base()
         {
             this.context = context;
             this.items = items;
+       
         }
 
         public override Task this[int position]
@@ -34,18 +36,24 @@ namespace ZAPP
         {
             return position;
         }
-        public override View GetView(int position, View convertView, ViewGroup parent)
+        public override View GetView(int position, View view, ViewGroup parent)
         {
             var item = items[position];
-            View view = convertView;
+           
             if (view == null)
             {
                 view = context.LayoutInflater.Inflate(Resource.Layout.ListRow, null);
             }
-            view.FindViewById<TextView>(Resource.Id.Text1).Text = item.id;
+            ClientRecord client = Config.getClient(item.client_id, Config.getActivity(view));
+            if (client != null)
+            {
+                view.FindViewById<TextView>(Resource.Id.Text1).Text = client.getAddress();
+            }
+            
             view.FindViewById<TextView>(Resource.Id.Text2).Text = item.taskName;
             view.FindViewById<TextView>(Resource.Id.Text3).Text = item.taskDate;
             return view;
         }
+      
     } // end Class
 } // end NameSpace

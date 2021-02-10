@@ -13,7 +13,7 @@ using System.Text;
 
 namespace ZAPP
 {
-    class ClientRecord
+    public class ClientRecord
     {
         public int id;
         public string map;
@@ -42,8 +42,11 @@ namespace ZAPP
             this.telephone = (string)record["telephone"];
             this.planning = (string)record["planning"];
         }
-
         public string getAddress()
+        {
+            return this.address;
+        }
+        public string getAddress(int id)
         {
             return this.address;
         }

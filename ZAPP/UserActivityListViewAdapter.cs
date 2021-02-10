@@ -36,15 +36,17 @@ namespace ZAPP
         }
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
-            var item = items[position];
+            UserActivity item = items[position];
             View view = convertView;
             if (view == null)
             {
-                view = context.LayoutInflater.Inflate(Resource.Layout.ListRow, null);
+                view = context.LayoutInflater.Inflate(Resource.Layout.ActivityRow, null);
             }
-            view.FindViewById<TextView>(Resource.Id.Text1).Text = item.id;
-            view.FindViewById<TextView>(Resource.Id.Text2).Text = item.activityName;
-            view.FindViewById<TextView>(Resource.Id.Text3).Text = item.isCompleted;
+            
+            view.FindViewById<TextView>(Resource.Id.activityName).Text = item.activityName;
+            CheckBox isChecked = view.FindViewById<CheckBox>(Resource.Id.checkBox);
+            isChecked.Enabled = true;
+            isChecked.Checked = bool.Parse(item.isCompleted);
             return view;
         }
     } // end Class

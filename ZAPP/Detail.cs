@@ -50,20 +50,7 @@ namespace ZAPP
 
         private void displayClientForTask(string clientId)
         {
-            ClientRecord client = null;
-            
-            try
-            {
-                client = Config.getClient(clientId);
-            }
-            catch (Exception ex)
-            {
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.SetMessage("Inconsistent database, non-existent client");
-                Dialog dialog = alert.Create();
-                dialog.Show();
-                return;
-            }
+            ClientRecord client = Config.getClient(clientId, this);
             
             var imageBitmap = GetImageBitmapFromUrl(client.getMap());
 

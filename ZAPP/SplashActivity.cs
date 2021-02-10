@@ -14,8 +14,7 @@ namespace ZAPP
     using Android.OS;
     using ZAPP;
 
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true,
-   NoHistory = true)]
+    [Activity(Theme = "@style/splashTheme", MainLauncher = true, NoHistory = true)]
     
     public class SplashActivity : Activity
     {
@@ -26,7 +25,7 @@ namespace ZAPP
             string databasePath = _database.makeDatabaseName(this);
             Config.callDatabase(new _database(this, !File.Exists(databasePath)), databasePath);
             Thread.Sleep(1000);
-            StartActivity(typeof(Home));
+            StartActivity(typeof(Login));
         }
     }
 }

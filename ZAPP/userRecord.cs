@@ -13,28 +13,34 @@ using System.Text;
 
 namespace ZAPP
 {
-    class userRecord
+    class UserRecord
     {
         public int id;
-        public string code;
-        public string description;
+        public string username;
+        public string password;
+      
 
-        public userRecord()
+        public UserRecord()
         {
 
         }
 
-        public userRecord(JsonValue record)
+        public UserRecord(JsonValue record)
         {
-            this.code = (string)record["username"];
-            this.description = (string)record["password"];
+            this.username = (string)record["username"];
+            this.password = (string)record["password"];
         }
 
-        public userRecord(SqliteDataReader record)
+        public UserRecord(SqliteDataReader record)
         {
             this.id = (int)(Int64)record["id"];
-            this.code = (string)record["username"];
-            this.description = (string)record["password"];
+            this.username = (string)record["username"];
+            this.password = (string)record["password"];
+        }
+
+        public string getPassword()
+        {
+            return this.password;
         }
     }
 }

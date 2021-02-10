@@ -18,19 +18,23 @@ namespace ZAPP
         ListView listView;
         List<Task> taskRecords;
 
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Home);
 
             List<TaskRecord> taskList = Config.getTasksByUser("1");
+           
             taskRecords = new List<Task>();  // define new list
+
             foreach (TaskRecord value in taskList) // copy from results into records
             {
                 Task row = new Task(value.id, value.client_id, value.taskName, value.taskDate);
                 taskRecords.Add(row);
             }
-            // these 3 lines can be considered as a form in html
+           
+           // these 3 lines can be considered as a form in html
             listView = FindViewById<ListView>(Resource.Id.Overview); // link to overview in xml
             listView.Adapter = new HomeListViewAdapter(this, taskRecords); // contains all stuff inside of listView => records are added here
             listView.ItemClick += OnListItemClick; // when user clicks on list , the click is executed

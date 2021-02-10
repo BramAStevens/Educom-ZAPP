@@ -54,7 +54,7 @@ namespace ZAPP
            return(activities);
         }
 
-        public static ArrayList getAllUsers() // is still hardcoded in _database class
+        public static List<UserRecord> getAllUsers() // is still hardcoded in _database class
         {
            return db.getAllUsers(dbPath);
  
@@ -71,6 +71,43 @@ namespace ZAPP
         public static void log(string text)
         {
             Console.WriteLine(text);
+        }
+
+        public static UserRecord getUserByUsername(string username)
+        {
+            return db.getUserByUsername(dbPath, username);
+        }
+        public static ClientRecord getClient(string clientId, Activity activity)
+        {
+            ClientRecord client = null;
+
+            try
+            {
+                client = Config.getClient(clientId);
+            }
+            catch (Exception)
+            {
+                AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+                alert.SetMessage("Inconsistent database, non-existent client");
+                Dialog dialog = alert.Create();
+                dialog.Show();
+                return null;
+            }
+            return client;
+        }
+
+        public static Activity getActivity(View view)
+        {
+            Context context = view.Context;
+            while (context is ContextWrapper)
+            {
+                if (context is Activity)
+                {
+                    return (Activity)context;
+                }
+                context = ((ContextWrapper)context).BaseContext;
+            }
+            return null;
         }
     }
 }

@@ -15,12 +15,8 @@ namespace ZAPP
     {
         public string id;
         public string client_id;
-        public string user_id;
-        public string startTask;
-        public string stopTask;
         public string taskName;
         public string taskDate;
-        public string isCompleted;
 
         public Task(int id, string client_id, string taskName, string taskDate)
         {
@@ -30,5 +26,6 @@ namespace ZAPP
             this.taskDate = taskDate;
             
         }
+
     }
 }

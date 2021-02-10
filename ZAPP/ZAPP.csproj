@@ -63,7 +63,8 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="activityRecord.cs" />
+    <Compile Include="ActivityRecord.cs" />
+    <Compile Include="Client.cs" />
     <Compile Include="ClientRecord.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Detail.cs" />
@@ -77,7 +78,7 @@
     <Compile Include="TaskRecord.cs" />
     <Compile Include="UserActivity.cs" />
     <Compile Include="UserActivityListViewAdapter.cs" />
-    <Compile Include="userRecord.cs" />
+    <Compile Include="UserRecord.cs" />
     <Compile Include="_database.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +135,19 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\splashLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\ActivityRow.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\Login.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

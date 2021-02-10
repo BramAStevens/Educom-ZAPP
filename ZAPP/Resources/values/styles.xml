@@ -4,6 +4,12 @@
 		<item name="android:windowBackground">@drawable/splash</item>
 		<item name="android:windowNoTitle">true</item>
 	</style>
+	<style name="splashTheme" parent="android:Theme">
+		<item name="android:windowBackground">@drawable/splashlogo</item>
+		<item name="android:windowNoTitle">true</item>
+	</style>
+
 </resources>
+
 
 

@@ -11,7 +11,38 @@ using System.Text;
 
 namespace ZAPP
 {
-    class Login
+
+    class Login : Activity
     {
+        
+        protected override void OnCreate(Bundle bundle)
+        {
+            base.OnCreate(bundle);
+            SetContentView(Resource.Layout.Login);
+
+          EditText editUsername = FindViewById<EditText>(Resource.Id.editUsername);
+          EditText editPassword = FindViewById<EditText>(Resource.Id.editPassword);
+          Button loginButton = FindViewById<Button>(Resource.Id.loginButton);
+
+            loginButton.Click += delegate
+            {
+                login(editUsername.Text, editPassword.Text);
+            };
+   
+        }
+
+        protected void login(string username, string password)
+        {
+            UserRecord user = Config.getUserByUsername(username);
+            string storedPassword = user.getPassword();
+
+            if (password == storedPassword)
+            {
+                StartActivity(typeof(Home));
+            } else
+            {
+                Config.log("WRONG PASSWORD");
+            }
+        }
     }
-}
+} 

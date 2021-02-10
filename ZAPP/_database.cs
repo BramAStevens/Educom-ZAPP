@@ -303,6 +303,43 @@ namespace ZAPP
             return activityRecords;
         }
 
+        public UserRecord getUserByUsername(string dbPath, string username)
+        {
+            UserRecord user = null;
+            var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM user WHERE (username) = @username";
+                    cmd.Parameters.Add(new SqliteParameter("@username", username));
+                    cmd.CommandType = CommandType.Text;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        int i = 0;
+                        while (reader.Read())
+                        {
+                            Config.log("USERBYUSERNAME ARE BEING READ");
+                            i++;
+                            user = new UserRecord(reader);
+                        }
+                        if (i > 1)
+                        {
+                            Config.log("ERROR MORE USER RECORDS THAN EXPECTED!!!!!!!!");
+                        }
+                        if (user == null)
+                        {
+                            throw new ArgumentException("No such user! ", username);
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            Config.log("USERS RETURNED TO USERRECORDS");
+            return user;
+        }
         public ClientRecord getClient(string dbPath, string client_id)
         {
             ClientRecord client = null;
@@ -340,6 +377,7 @@ namespace ZAPP
             Config.log("CLIENT RETURNED TO TASKRECORDS");
             return client;
         }
+
         public ArrayList getActivitiesByTask(string dbPath, string task_id)
         {
             ArrayList activityRecords = new ArrayList();
@@ -370,9 +408,9 @@ namespace ZAPP
             return activityRecords;
         }
 
-        public ArrayList getAllUsers(string dbPath)
+        public List<UserRecord> getAllUsers(string dbPath)
         {
-            ArrayList userRecords = new ArrayList();
+            List<UserRecord> userRecords = new List<UserRecord>();
             var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
             {
@@ -387,7 +425,7 @@ namespace ZAPP
                         while (reader.Read())
                         {
                             Config.log("ALL USERS ARE BEING READ");
-                            userRecords.Add(new userRecord(reader));
+                            userRecords.Add(new UserRecord(reader));
                         }
                     }
                 }
@@ -425,7 +463,9 @@ namespace ZAPP
             Config.log("TASKS RETURNED TO TASKRECORDS");
             return taskRecords;
         }
-       
+
+        
+
         public List<ClientRecord> getAllClients(string dbPath)
         {
             List<ClientRecord> clientRecords = new List<ClientRecord>();
