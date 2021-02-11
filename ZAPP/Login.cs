@@ -14,7 +14,7 @@ namespace ZAPP
 
     public class Login : Activity
     {
-       
+        public static int userId;
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -35,14 +35,13 @@ namespace ZAPP
                 goToHome();
             };
         }
-        public int userId;
+       
         protected void login(string username, string password)
         {
             string storedPassword = null;
             UserRecord user = Config.getUserByUsername(username);
             if (user == null)
             {
-                
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.SetMessage("Please enter a valid username!");
                 Dialog dialog = alert.Create();
@@ -51,10 +50,10 @@ namespace ZAPP
             else
             {
                 storedPassword = user.getPassword();
-                //  userId = user.getId();
+              //  userId = user.getId();
                 if (password == storedPassword)
                 {
-                    Config.updateActivityInDatabase("601a6551393665aec70001fd");
+             
                     goToHome();
                 }
                 else
@@ -69,6 +68,7 @@ namespace ZAPP
         protected void goToHome()
         {
                 StartActivity(typeof(Home));
+                Config.updateActivityInDatabase("601a6551393665aec70001fd");
         }
     }
 } 

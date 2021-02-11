@@ -46,7 +46,7 @@ namespace ZAPP
             view.FindViewById<TextView>(Resource.Id.activityName).Text = item.activityName;
             CheckBox isChecked = view.FindViewById<CheckBox>(Resource.Id.checkBox);
             isChecked.Enabled = true;
-            isChecked.Checked = bool.Parse(item.isCompleted);
+            isChecked.Checked = item.isCompleted;
             return view;
         }
     } // end Class

@@ -121,7 +121,7 @@ namespace ZAPP
                 {
 
                   //   Config.log($"{item["task_id"]} = task_id, {item["isCompleted"]} = isCompleted,  {item["activityName"]} = activityName");
-                    this.activityToDatabase(item["task_id"], item["isCompleted"], item["activityName"], databasePath);
+                    this.activityToDatabase(item["_id"], item["task_id"], item["isCompleted"], item["activityName"], databasePath);
 
                 }
 
@@ -224,13 +224,13 @@ namespace ZAPP
                     
                 }
                 conn.Close();
-             //   ActivityRecord activity = getActivityById(_id, dbPath);
-             //   Config.log($"{activity.getIsCompleted()}");
+                ActivityRecord activity = getActivityById(_id, dbPath);
+                Config.log($"{activity.getIsCompleted()} = setActivityTrue");
             }
         }
 
 
-        public void activityToDatabase(string task_id, string isCompleted, string activityName, string dbPath)
+        public void activityToDatabase(string _id, string task_id, string isCompleted, string activityName, string dbPath)
         {
             var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
@@ -240,7 +240,8 @@ namespace ZAPP
                 using (var cmd = conn.CreateCommand())
                 {
                     // Table data
-                    cmd.CommandText = "INSERT INTO activity (task_id, isCompleted, activityName) VALUES (@task_id, @isCompleted, @activityName)";
+                    cmd.CommandText = "INSERT INTO activity (_id, task_id, isCompleted, activityName) VALUES (@_id, @task_id, @isCompleted, @activityName)";
+                    cmd.Parameters.Add(new SqliteParameter("@_id", _id));
                     cmd.Parameters.Add(new SqliteParameter("@task_id", task_id));
                     cmd.Parameters.Add(new SqliteParameter("@isCompleted", isCompleted));
                     cmd.Parameters.Add(new SqliteParameter("@activityName", activityName));

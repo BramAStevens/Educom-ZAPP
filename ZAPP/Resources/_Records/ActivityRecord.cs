@@ -17,7 +17,7 @@ namespace ZAPP
     {
         public int id;
         public string task_id;
-        public string isCompleted;
+        public bool isCompleted;
         public string activityName;
 
         public ActivityRecord()
@@ -28,7 +28,15 @@ namespace ZAPP
         public ActivityRecord(JsonValue record)
         {
             this.task_id = (string)record["task_id"];
-            this.isCompleted = (string)record["isCompleted"];
+            string s = (string)record["isCompleted"];
+            if (s == "true" || s == "false")
+            {
+                this.isCompleted = bool.Parse(s);
+            }
+            else
+            {
+                this.isCompleted = Int32.Parse(s) == 1;
+            }
             this.activityName = (string)record["activityName"];
         }
 
@@ -36,11 +44,18 @@ namespace ZAPP
         {
             this.id = (int)(Int64)record["id"];
             this.task_id = (string)record["task_id"];
-            this.isCompleted = (string)record["isCompleted"];
+            string s = (string)record["isCompleted"];
+            if (s == "true" || s == "false")
+            {
+                this.isCompleted = bool.Parse(s);
+            } else
+            {
+                this.isCompleted = Int32.Parse(s) == 1;
+            }
             this.activityName = (string)record["activityName"];
         }
 
-        public string getIsCompleted()
+        public bool getIsCompleted()
         {
             return this.isCompleted;
         }

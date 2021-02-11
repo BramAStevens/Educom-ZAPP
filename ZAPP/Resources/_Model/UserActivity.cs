@@ -15,9 +15,9 @@ namespace ZAPP
     {
         public string id;
         public string activityName;
-        public string isCompleted;
+        public bool isCompleted;
 
-        public UserActivity(int id, string activityName, string isCompleted)
+        public UserActivity(int id, string activityName, bool isCompleted)
         {
             this.id = id.ToString();
             this.activityName = activityName;
