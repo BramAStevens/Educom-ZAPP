@@ -45,10 +45,10 @@ namespace ZAPP
             ClientRecord client = Config.getClient(item.client_id, Config.getActivity(view));
             if (client != null)
             {
-                view.FindViewById<TextView>(Resource.Id.Text1).Text = client.getAddress();
+                view.FindViewById<TextView>(Resource.Id.Text1).Text = item.taskName;
             }
             
-            view.FindViewById<TextView>(Resource.Id.Text2).Text = item.taskName;
+            view.FindViewById<TextView>(Resource.Id.Text2).Text = client.getAddress();
             view.FindViewById<TextView>(Resource.Id.Text3).Text = item.taskDate;
             return view;
         }

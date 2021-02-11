@@ -38,19 +38,33 @@ namespace ZAPP
         public int userId;
         protected void login(string username, string password)
         {
+            string storedPassword = null;
             UserRecord user = Config.getUserByUsername(username);
-            string storedPassword = user.getPassword();
-            userId = user.getId();
-            if (password == storedPassword)
+            if (user == null)
             {
-                goToHome();
-            } else
-            {
+                
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.SetMessage("Wrong login credentials!");
+                alert.SetMessage("Please enter a valid username!");
                 Dialog dialog = alert.Create();
                 dialog.Show();
             }
+            else
+            {
+                storedPassword = user.getPassword();
+                //  userId = user.getId();
+                if (password == storedPassword)
+                {
+                    Config.updateActivityInDatabase("601a6551393665aec70001fd");
+                    goToHome();
+                }
+                else
+                {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                    alert.SetMessage("Please enter a valid password!");
+                    Dialog dialog = alert.Create();
+                    dialog.Show();
+                }
+            }          
         }
         protected void goToHome()
         {

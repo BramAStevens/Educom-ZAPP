@@ -43,6 +43,11 @@ namespace ZAPP
 
         }
 
+        public static void updateActivityInDatabase(string _id)
+        {
+            db.updateActivityInDatabase(_id, dbPath);
+        }
+
         public static List<TaskRecord> getTasksByUser(string user_id) // WORKS CORRECTLY
         {
             return db.getTasksByUser(dbPath, user_id);

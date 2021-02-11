@@ -13,31 +13,36 @@ using System.Text;
 
 namespace ZAPP
 {
-    class activityRecord
+    class ActivityRecord
     {
         public int id;
         public string task_id;
         public string isCompleted;
         public string activityName;
 
-        public activityRecord()
+        public ActivityRecord()
         {
 
         }
 
-        public activityRecord(JsonValue record)
+        public ActivityRecord(JsonValue record)
         {
             this.task_id = (string)record["task_id"];
             this.isCompleted = (string)record["isCompleted"];
             this.activityName = (string)record["activityName"];
         }
 
-        public activityRecord(SqliteDataReader record)
+        public ActivityRecord(SqliteDataReader record)
         {
             this.id = (int)(Int64)record["id"];
             this.task_id = (string)record["task_id"];
             this.isCompleted = (string)record["isCompleted"];
             this.activityName = (string)record["activityName"];
+        }
+
+        public string getIsCompleted()
+        {
+            return this.isCompleted;
         }
     }
 }

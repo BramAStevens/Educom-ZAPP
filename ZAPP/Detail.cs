@@ -30,6 +30,16 @@ namespace ZAPP
             
             displayClientForTask(Intent.GetStringExtra("CLIENT_ID"));
             makeActivityList(Intent.GetStringExtra("TASK_ID"));
+            ImageView iconClick = FindViewById<ImageView>(Resource.Id.imageClick);
+            iconClick.Click += delegate
+            {
+             goToHome();
+            };
+        }
+
+        protected void goToHome()
+        {
+            StartActivity(typeof(Home));
         }
 
         private Android.Graphics.Bitmap GetImageBitmapFromUrl(string url)
@@ -53,9 +63,10 @@ namespace ZAPP
             ClientRecord client = Config.getClient(clientId, this);
             
             var imageBitmap = GetImageBitmapFromUrl(client.getMap());
-
-            FindViewById<TextView>(Resource.Id.textViewCode).Text = client.getAddress();
-            FindViewById<TextView>(Resource.Id.textViewDefinition).Text = client.getTelephone();
+            
+            FindViewById<TextView>(Resource.Id.textViewAddress).Text = "🗺 - " + client.getAddress();
+            FindViewById<TextView>(Resource.Id.textViewTelephone).Text = "📞 - " + client.getTelephone();
+            FindViewById<TextView>(Resource.Id.textViewPlanning).Text = "📝 - " + client.getPlanning();
             FindViewById<ImageView>(Resource.Id.imageViewMap).SetImageBitmap(imageBitmap);
         }
 
@@ -81,7 +92,7 @@ namespace ZAPP
             
             ArrayList activityList = Config.getActivitiesByTask(taskId);
             List<UserActivity> records = new List<UserActivity>(); 
-            foreach (activityRecord value in activityList) // copy from results into records
+            foreach (ActivityRecord value in activityList) // copy from results into records
             {
                 UserActivity row = new UserActivity(value.id, value.activityName, value.isCompleted);
                 records.Add(row);

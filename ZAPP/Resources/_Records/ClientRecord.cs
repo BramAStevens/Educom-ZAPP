@@ -56,6 +56,11 @@ namespace ZAPP
             return this.telephone;
         }
 
+        public string getPlanning()
+        {
+            return this.planning;
+        }
+
         public string getMap()
         {
             return this.map;

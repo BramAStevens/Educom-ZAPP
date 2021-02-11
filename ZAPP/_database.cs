@@ -206,6 +206,30 @@ namespace ZAPP
             this.getAllClients(dbPath);
         }
 
+        public void updateActivityInDatabase(string _id, string dbPath)
+        {
+            var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    // Table data
+                    cmd.CommandText = "UPDATE activity SET (isCompleted) = true WHERE (_id) = (@_id)";
+                    cmd.Parameters.Add(new SqliteParameter("@_id", _id));
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                    Config.log("ACTIVITY ISCOMPLETED UPDATED IN DB");
+                    
+                }
+                conn.Close();
+             //   ActivityRecord activity = getActivityById(_id, dbPath);
+             //   Config.log($"{activity.getIsCompleted()}");
+            }
+        }
+
+
         public void activityToDatabase(string task_id, string isCompleted, string activityName, string dbPath)
         {
             var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
@@ -276,6 +300,35 @@ namespace ZAPP
             }
         }
 
+        public ActivityRecord getActivityById(string _id, string dbPath)
+        {
+            ActivityRecord activity = null;
+            var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM activity WHERE (_id) = @_id";
+                    cmd.Parameters.Add(new SqliteParameter("@_id", _id));
+                    cmd.CommandType = CommandType.Text;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Config.log("ALL ACTIVITIES ARE BEING READ");
+                            activity = new ActivityRecord(reader);
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            Config.log("DATA RETURNED TO ACTIVITYRECORDS");
+
+            return activity;
+        }
+
         public ArrayList getAllActivities(string dbPath)
         {
             ArrayList activityRecords = new ArrayList();
@@ -293,14 +346,15 @@ namespace ZAPP
                         while (reader.Read())
                         {
                             Config.log("ALL ACTIVITIES ARE BEING READ");
-                            activityRecords.Add(new activityRecord(reader));
+                            activityRecords.Add(new ActivityRecord(reader));
                         }
                     }
                 }
                 conn.Close();
             }
             Config.log("DATA RETURNED TO ACTIVITYRECORDS");
-            return activityRecords;
+           
+                return activityRecords;
         }
 
         public UserRecord getUserByUsername(string dbPath, string username)
@@ -328,10 +382,6 @@ namespace ZAPP
                         if (i > 1)
                         {
                             Config.log("ERROR MORE USER RECORDS THAN EXPECTED!!!!!!!!");
-                        }
-                        if (user == null)
-                        {
-                            throw new ArgumentException("No such user! ", username);
                         }
                     }
                 }
@@ -397,7 +447,7 @@ namespace ZAPP
                         {
                             Config.log("ACTIVITIESBYTASK ARE BEING READ");
                             
-                            activityRecords.Add(new activityRecord(reader));
+                            activityRecords.Add(new ActivityRecord(reader));
                            
                         }
                     }

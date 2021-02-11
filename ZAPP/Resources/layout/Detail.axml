@@ -10,11 +10,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/checkedTextView1" />
 
-    <ImageView
+        <ImageView
         android:layout_width="fill_parent"
         android:layout_height="300px"
         android:layout_marginTop="70px"
-        android:src="@drawable/icon"/>
+        android:src="@drawable/icon"
+        android:id="@+id/imageClick"/>
     <TabHost
         android:id="@+id/tabhost"
         
@@ -51,38 +52,75 @@
                     android:minWidth="25px"
                     android:minHeight="25px"
                     android:orientation="horizontal">
+                                         <ScrollView
+        android:id="@+id/scrollyear1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+                    >
+<LinearLayout
+                    android:id="@+id/xd1"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
                                 <ListView
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/OverviewDetail"/>
-  
+                    </LinearLayout>
+                     </ScrollView>
                 </LinearLayout>
+                 
                 <LinearLayout
                     android:id="@+id/tab2"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                     <TextView
+                      <ScrollView
+        android:id="@+id/scrollyear1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+                    >
+<LinearLayout
+                    android:id="@+id/xd"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                   <TextView
+       
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dip"
+        android:layout_marginTop="50px"   
+        android:layout_marginLeft="50px"
+                       
+        android:id="@+id/textViewAddress"/>
+    <TextView
+       
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dip"                
+        android:layout_marginTop="200px"   
+        android:layout_marginLeft="50px"
+                      
+        android:id="@+id/textViewTelephone"/>
+       <TextView
       
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="20dip"
+        android:layout_marginTop="200px"
+        android:layout_marginLeft="50px"
+  
         android:minWidth="25px"
         android:minHeight="25px"
-        android:id="@+id/textViewId"/>
-    <TextView
-       
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewCode"/>
-    <TextView
-       
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewDefinition"/>
-      
+        android:id="@+id/textViewPlanning"/>
+                        </LinearLayout>
+                     </ScrollView>
                 </LinearLayout>
+                        
                 <LinearLayout
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"
@@ -111,7 +149,5 @@
    />
 
 </LinearLayout>  
-   
-
 
 
