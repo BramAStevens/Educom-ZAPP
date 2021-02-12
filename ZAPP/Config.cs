@@ -46,6 +46,8 @@ namespace ZAPP
         public static void updateActivityInDatabase(string _id, bool isCompleted)
         {
             db.updateActivityInDatabase(_id, isCompleted, dbPath);
+            log(_id + " FindupdateACtivityID");
+            log(isCompleted + " FindupdateACtivityBOOL");
         }
 
         public static List<TaskRecord> getTasksByUser(string user_id) // WORKS CORRECTLY

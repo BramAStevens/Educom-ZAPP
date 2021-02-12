@@ -30,15 +30,7 @@ namespace ZAPP
         {
             this.task_id = (string)record["task_id"];
             this._id = (string)record["_id"];
-            string s = (string)record["isCompleted"];
-            if (s == "true" || s == "false")
-            {
-                this.isCompleted = bool.Parse(s);
-            }
-            else
-            {
-                this.isCompleted = Int32.Parse(s) == 1;
-            }
+            this.isCompleted = (bool)record["isCompleted"];
             this.activityName = (string)record["activityName"];
         }
 
@@ -47,14 +39,7 @@ namespace ZAPP
             this.id = (int)(Int64)record["id"];
             this._id = (string)record["_id"];
             this.task_id = (string)record["task_id"];
-            string s = (string)record["isCompleted"];
-            if (s == "true" || s == "false")
-            {
-                this.isCompleted = bool.Parse(s);
-            } else
-            {
-                this.isCompleted = Int32.Parse(s) == 1;
-            }
+            this.isCompleted = (bool)record["isCompleted"];
             this.activityName = (string)record["activityName"];
         }
 

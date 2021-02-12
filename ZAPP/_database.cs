@@ -255,22 +255,23 @@ namespace ZAPP
                 using (var cmd = conn.CreateCommand())
                 {
                     // Table data
-                    cmd.CommandText = "UPDATE activity SET (isCompleted) = @isCompleted WHERE (_id) = (@_id)";
+                    cmd.CommandText = "UPDATE activity SET isCompleted = @isCompleted WHERE _id = @_id";
                     cmd.Parameters.Add(new SqliteParameter("@_id", _id));
                     cmd.Parameters.Add(new SqliteParameter("@isCompleted", isCompleted));
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
                     Config.log("ACTIVITY ISCOMPLETED UPDATED IN DB");
-                    
+                    uploadActivityData();
                 }
                 conn.Close();
                 ActivityRecord activity = getActivityById(_id, dbPath);
                 Config.log($"{activity.getIsCompleted()} = setActivityTrue");
+                
             }
         }
 
 
-        public void activityToDatabase(string _id, string task_id, string isCompleted, string activityName, string dbPath)
+        public void activityToDatabase(string _id, string task_id, bool isCompleted, string activityName, string dbPath)
         {
             var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
@@ -315,7 +316,7 @@ namespace ZAPP
             this.getAllUsers(dbPath);
         }
 
-        public void taskToDatabase(string client_id, string user_id, string startTask, string stopTask, string taskDate, string taskName, string isCompleted, string dbPath)
+        public void taskToDatabase(string client_id, string user_id, string startTask, string stopTask, string taskDate, string taskName, bool isCompleted, string dbPath)
         {
             var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
@@ -536,7 +537,7 @@ namespace ZAPP
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM task WHERE (user_id) = @user_id";
+                    cmd.CommandText = "SELECT * FROM task WHERE (user_id) = @user_id AND (isCompleted) = true";
                     cmd.Parameters.Add(new SqliteParameter("@user_id", user_id));
                     cmd.CommandType = CommandType.Text;
 

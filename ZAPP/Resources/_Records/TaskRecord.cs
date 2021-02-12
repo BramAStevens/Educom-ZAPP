@@ -22,7 +22,7 @@ namespace ZAPP
         public string stopTask;
         public string taskDate;
         public string taskName;
-        public string isCompleted;
+        public bool isCompleted;
 
 
         public TaskRecord()
@@ -38,7 +38,7 @@ namespace ZAPP
             this.stopTask = (string)record["stopTask"];
             this.taskName = (string)record["taskName"];
             this.taskDate = (string)record["taskDate"];
-            this.isCompleted = (string)record["isCompleted"];
+            this.isCompleted = (bool)record["isCompleted"];
         }
 
         public TaskRecord(SqliteDataReader record)
@@ -50,7 +50,7 @@ namespace ZAPP
             this.stopTask = (string)record["stopTask"];
             this.taskName = (string)record["taskName"];
             this.taskDate = (string)record["taskDate"];
-            this.isCompleted = (string)record["isCompleted"];
+            this.isCompleted = (bool)record["isCompleted"];
         }
     }
 }

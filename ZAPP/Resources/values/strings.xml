@@ -28,7 +28,7 @@
 		(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		task_id ntext,
-		isCompleted ntext,
+		isCompleted bool,
 		activityName ntext,
 		_mby ntext,
 		_by ntext,
@@ -47,7 +47,7 @@
 		stopTask ntext,
 		taskDate ntext,
 		taskName ntext,
-		isCompleted ntext,
+		isCompleted bool,
 		_mby ntext,
 		_by ntext,
 		_modified ntext,

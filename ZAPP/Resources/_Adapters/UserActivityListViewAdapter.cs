@@ -47,8 +47,11 @@ namespace ZAPP
             CheckBox isChecked = view.FindViewById<CheckBox>(Resource.Id.checkBox);
             isChecked.Enabled = true;
             isChecked.Checked = item.isCompleted;
-            Config.updateActivityInDatabase(item._id, item.isCompleted);
-            Config.uploadActivityData();
+            isChecked.Click += (object sender, EventArgs e) =>
+            {
+                item.isCompleted = isChecked.Checked;
+                Config.updateActivityInDatabase(item._id, item.isCompleted);
+            };
             return view;
         }
     } // end Class
