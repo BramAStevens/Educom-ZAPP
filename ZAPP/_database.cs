@@ -12,6 +12,7 @@ using Android.App;
 using Android.Content;
 using Android.Content.Res;
 using ZAPP;
+using Newtonsoft.Json;
 
 namespace ZAPP
 {
@@ -21,8 +22,10 @@ namespace ZAPP
         private Activity activity;
         private string taskUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/task?token=9d9a3b472d501a972c788077b12fb5/";
         private string userUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/user?token=9d9a3b472d501a972c788077b12fb5/";
-        private string activityUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/activity?token=9d9a3b472d501a972c788077b12fb5/";
         private string clientUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/client?token=9d9a3b472d501a972c788077b12fb5/";
+        private string activityUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/activity?token=9d9a3b472d501a972c788077b12fb5/";
+        private string postActivityUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/save/activity?token=9d9a3b472d501a972c788077b12fb5/";
+       
         public static string ZAPPDB = "ZAPPDB";
 
         // Constructor
@@ -105,6 +108,45 @@ namespace ZAPP
 
             }
         }
+        public void uploadActivityData()
+        {
+            var webClient = new WebClient();
+            webClient.Encoding = Encoding.UTF8;
+            try
+            {
+              //  const string preFix = "'entries':";
+                List<ActivityRecord> allActivities = Config.getAllActivities();
+                var objAsJson = JsonConvert.SerializeObject(allActivities);
+              //  webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
+              //  string HtmlResult = webClient.UploadString(postActivityUrl, objAsJson.ToString());
+                Config.log(objAsJson.ToString() + "= JSON FINDME");
+                string result = writeJsonToServer(objAsJson.ToString());
+                Config.log("RESULT OF WRITE JSON =" + result);
+            }
+            catch (WebException)
+            {
+
+            }
+        }
+
+        public string writeJsonToServer(string json)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(postActivityUrl);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write("{\"data\": " + json + " }");
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                return result.ToString();
+            }
+        }
 
         public void downloadActivityData(string url, string databasePath)
         {
@@ -168,13 +210,10 @@ namespace ZAPP
                 JsonValue value = JsonValue.Parse(download);
                 var entries = value["entries"];
                 foreach (JsonObject item in entries)
-                {
-
+                { 
                    // Config.log($"{item["client_id"]} = client_id, {item["user_id"]} = user_id, {item["startTask"]} = startTask, {item["stopTask"]} = stopTask, {item["taskDate"]} = taskDate, {item["taskName"]} = taskName, {item["isCompleted"]} = isCompleted");
                     this.taskToDatabase(item["client_id"], item["user_id"], item["startTask"], item["stopTask"], item["taskDate"], item["taskName"], item["isCompleted"], databasePath);
-          
                 }
-
             }
             catch (WebException)
             {
@@ -206,7 +245,7 @@ namespace ZAPP
             this.getAllClients(dbPath);
         }
 
-        public void updateActivityInDatabase(string _id, string dbPath)
+        public void updateActivityInDatabase(string _id, bool isCompleted, string dbPath)
         {
             var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
@@ -216,8 +255,9 @@ namespace ZAPP
                 using (var cmd = conn.CreateCommand())
                 {
                     // Table data
-                    cmd.CommandText = "UPDATE activity SET (isCompleted) = true WHERE (_id) = (@_id)";
+                    cmd.CommandText = "UPDATE activity SET (isCompleted) = @isCompleted WHERE (_id) = (@_id)";
                     cmd.Parameters.Add(new SqliteParameter("@_id", _id));
+                    cmd.Parameters.Add(new SqliteParameter("@isCompleted", isCompleted));
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
                     Config.log("ACTIVITY ISCOMPLETED UPDATED IN DB");
@@ -330,9 +370,9 @@ namespace ZAPP
             return activity;
         }
 
-        public ArrayList getAllActivities(string dbPath)
+        public List<ActivityRecord> getAllActivities(string dbPath)
         {
-            ArrayList activityRecords = new ArrayList();
+            List<ActivityRecord> activityRecords = new List<ActivityRecord>();
             var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
             {

@@ -16,6 +16,7 @@ namespace ZAPP
     class ActivityRecord
     {
         public int id;
+        public string _id;
         public string task_id;
         public bool isCompleted;
         public string activityName;
@@ -28,6 +29,7 @@ namespace ZAPP
         public ActivityRecord(JsonValue record)
         {
             this.task_id = (string)record["task_id"];
+            this._id = (string)record["_id"];
             string s = (string)record["isCompleted"];
             if (s == "true" || s == "false")
             {
@@ -43,6 +45,7 @@ namespace ZAPP
         public ActivityRecord(SqliteDataReader record)
         {
             this.id = (int)(Int64)record["id"];
+            this._id = (string)record["_id"];
             this.task_id = (string)record["task_id"];
             string s = (string)record["isCompleted"];
             if (s == "true" || s == "false")

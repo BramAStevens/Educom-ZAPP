@@ -68,7 +68,7 @@ namespace ZAPP
         protected void goToHome()
         {
                 StartActivity(typeof(Home));
-                Config.updateActivityInDatabase("601a6551393665aec70001fd");
+               
         }
     }
 } 

@@ -43,9 +43,9 @@ namespace ZAPP
 
         }
 
-        public static void updateActivityInDatabase(string _id)
+        public static void updateActivityInDatabase(string _id, bool isCompleted)
         {
-            db.updateActivityInDatabase(_id, dbPath);
+            db.updateActivityInDatabase(_id, isCompleted, dbPath);
         }
 
         public static List<TaskRecord> getTasksByUser(string user_id) // WORKS CORRECTLY
@@ -53,10 +53,15 @@ namespace ZAPP
             return db.getTasksByUser(dbPath, user_id);
         }
 
-        public static ArrayList getAllActivities() // is still hardcoded in _database class
+        public static List<ActivityRecord> getAllActivities() // is still hardcoded in _database class
         {
-           ArrayList activities = db.getAllActivities(dbPath);
+           List<ActivityRecord> activities = db.getAllActivities(dbPath);
            return(activities);
+        }
+
+        public static void uploadActivityData()
+        {
+            db.uploadActivityData();
         }
 
         public static List<UserRecord> getAllUsers() // is still hardcoded in _database class

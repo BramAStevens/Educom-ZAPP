@@ -92,9 +92,9 @@ namespace ZAPP
             
             ArrayList activityList = Config.getActivitiesByTask(taskId);
             List<UserActivity> records = new List<UserActivity>(); 
-            foreach (ActivityRecord value in activityList) // copy from results into records
+            foreach (ActivityRecord activityRecord in activityList) // copy from results into records
             {
-                UserActivity row = new UserActivity(value.id, value.activityName, value.isCompleted);
+                UserActivity row = new UserActivity(activityRecord.id, activityRecord._id, activityRecord.activityName, activityRecord.isCompleted);
                 records.Add(row);
             }
             // these 3 lines can be considered as a form in html
