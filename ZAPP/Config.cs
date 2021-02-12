@@ -50,9 +50,19 @@ namespace ZAPP
             log(isCompleted + " FindupdateACtivityBOOL");
         }
 
+        public static void updateTaskInDatabase(string _id)
+        {
+            db.updateTaskInDatabase(_id, dbPath);
+        }
+
         public static List<TaskRecord> getTasksByUser(string user_id) // WORKS CORRECTLY
         {
             return db.getTasksByUser(dbPath, user_id);
+        }
+
+        public static TaskRecord getTaskByTaskId(string taskId) // WORKS CORRECTLY
+        {
+            return db.getTaskByTaskId(dbPath, taskId);
         }
 
         public static List<ActivityRecord> getAllActivities() // is still hardcoded in _database class
@@ -66,16 +76,19 @@ namespace ZAPP
             db.uploadActivityData();
         }
 
-        public static List<UserRecord> getAllUsers() // is still hardcoded in _database class
+        public static List<UserRecord> getAllUsers() 
         {
            return db.getAllUsers(dbPath);
  
-           // EG for updateTask ==> loop over activities;
         }
 
-        // for task & activity for example ==> make sure that every task has a list of activities //
+        public static List<TaskRecord> getAllTasks() 
+        {
+            return db.getAllTasks(dbPath);
 
-        public static List<ClientRecord> getAllClients() // is still hardcoded in _database class
+        }
+
+        public static List<ClientRecord> getAllClients()
         {
             return db.getAllClients(dbPath);
         }

@@ -54,5 +54,5 @@ namespace ZAPP
             };
             return view;
         }
-    } // end Class
-} // end NameSpace
+    } 
+}

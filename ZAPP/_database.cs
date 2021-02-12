@@ -25,7 +25,7 @@ namespace ZAPP
         private string clientUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/client?token=9d9a3b472d501a972c788077b12fb5/";
         private string activityUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/activity?token=9d9a3b472d501a972c788077b12fb5/";
         private string postActivityUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/save/activity?token=9d9a3b472d501a972c788077b12fb5/";
-       
+        private string postTaskUrl = "http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/save/task?token=9d9a3b472d501a972c788077b12fb5/";
         public static string ZAPPDB = "ZAPPDB";
 
         // Constructor
@@ -114,13 +114,10 @@ namespace ZAPP
             webClient.Encoding = Encoding.UTF8;
             try
             {
-              //  const string preFix = "'entries':";
                 List<ActivityRecord> allActivities = Config.getAllActivities();
                 var objAsJson = JsonConvert.SerializeObject(allActivities);
-              //  webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
-              //  string HtmlResult = webClient.UploadString(postActivityUrl, objAsJson.ToString());
                 Config.log(objAsJson.ToString() + "= JSON FINDME");
-                string result = writeJsonToServer(objAsJson.ToString());
+                string result = writeJsonToServer(objAsJson.ToString(), postActivityUrl);
                 Config.log("RESULT OF WRITE JSON =" + result);
             }
             catch (WebException)
@@ -129,9 +126,27 @@ namespace ZAPP
             }
         }
 
-        public string writeJsonToServer(string json)
+        public void uploadTaskData()
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(postActivityUrl);
+            var webClient = new WebClient();
+            webClient.Encoding = Encoding.UTF8;
+            try
+            {
+                List<TaskRecord> allTasks = Config.getAllTasks();
+                var objAsJson = JsonConvert.SerializeObject(allTasks);
+                Config.log(objAsJson.ToString() + "= JSON FINDME");
+                string result = writeJsonToServer(objAsJson.ToString(), postTaskUrl);
+                Config.log("RESULT OF WRITE JSON =" + result);
+            }
+            catch (WebException)
+            {
+
+            }
+        }
+
+        public string writeJsonToServer(string json, string url)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
@@ -212,7 +227,7 @@ namespace ZAPP
                 foreach (JsonObject item in entries)
                 { 
                    // Config.log($"{item["client_id"]} = client_id, {item["user_id"]} = user_id, {item["startTask"]} = startTask, {item["stopTask"]} = stopTask, {item["taskDate"]} = taskDate, {item["taskName"]} = taskName, {item["isCompleted"]} = isCompleted");
-                    this.taskToDatabase(item["client_id"], item["user_id"], item["startTask"], item["stopTask"], item["taskDate"], item["taskName"], item["isCompleted"], databasePath);
+                    this.taskToDatabase(item["_id"], item["client_id"], item["user_id"], item["startTask"], item["stopTask"], item["taskDate"], item["taskName"], item["isCompleted"], databasePath);
                 }
             }
             catch (WebException)
@@ -260,16 +275,31 @@ namespace ZAPP
                     cmd.Parameters.Add(new SqliteParameter("@isCompleted", isCompleted));
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
-                    Config.log("ACTIVITY ISCOMPLETED UPDATED IN DB");
                     uploadActivityData();
                 }
-                conn.Close();
-                ActivityRecord activity = getActivityById(_id, dbPath);
-                Config.log($"{activity.getIsCompleted()} = setActivityTrue");
-                
+                conn.Close();   
             }
         }
 
+        public void updateTaskInDatabase(string _id, string dbPath)
+        {
+            var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    // Table data
+                    cmd.CommandText = "UPDATE task SET isCompleted = true WHERE _id = @_id";
+                    cmd.Parameters.Add(new SqliteParameter("@_id", _id));
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                    uploadTaskData();
+                }
+                conn.Close();
+            }
+        }
 
         public void activityToDatabase(string _id, string task_id, bool isCompleted, string activityName, string dbPath)
         {
@@ -316,7 +346,7 @@ namespace ZAPP
             this.getAllUsers(dbPath);
         }
 
-        public void taskToDatabase(string client_id, string user_id, string startTask, string stopTask, string taskDate, string taskName, bool isCompleted, string dbPath)
+        public void taskToDatabase(string _id, string client_id, string user_id, string startTask, string stopTask, string taskDate, string taskName, bool isCompleted, string dbPath)
         {
             var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
@@ -326,7 +356,8 @@ namespace ZAPP
                 using (var cmd = conn.CreateCommand())
                 {
                     // Table data
-                    cmd.CommandText = "INSERT INTO task (client_id, user_id, startTask, stopTask, taskDate, taskName, isCompleted) VALUES (@client_id, @user_id, @startTask, @stopTask, @taskDate, @taskName, @isCompleted)";
+                    cmd.CommandText = "INSERT INTO task (_id, client_id, user_id, startTask, stopTask, taskDate, taskName, isCompleted) VALUES (@_id, @client_id, @user_id, @startTask, @stopTask, @taskDate, @taskName, @isCompleted)";
+                    cmd.Parameters.Add(new SqliteParameter("@_id", _id));
                     cmd.Parameters.Add(new SqliteParameter("@client_id", client_id));
                     cmd.Parameters.Add(new SqliteParameter("@user_id", user_id));
                     cmd.Parameters.Add(new SqliteParameter("@startTask", startTask));
@@ -397,6 +428,31 @@ namespace ZAPP
             Config.log("DATA RETURNED TO ACTIVITYRECORDS");
            
                 return activityRecords;
+        }
+
+        public List<TaskRecord> getAllTasks(string dbPath)
+        {
+            List<TaskRecord> taskRecords = new List<TaskRecord>();
+            var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM task";
+                    cmd.CommandType = CommandType.Text;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            taskRecords.Add(new TaskRecord(reader));
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            return taskRecords;
         }
 
         public UserRecord getUserByUsername(string dbPath, string username)
@@ -537,7 +593,7 @@ namespace ZAPP
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM task WHERE (user_id) = @user_id AND (isCompleted) = true";
+                    cmd.CommandText = "SELECT * FROM task WHERE (user_id) = @user_id AND (isCompleted) = false";
                     cmd.Parameters.Add(new SqliteParameter("@user_id", user_id));
                     cmd.CommandType = CommandType.Text;
 
@@ -554,6 +610,44 @@ namespace ZAPP
             }
             Config.log("TASKS RETURNED TO TASKRECORDS");
             return taskRecords;
+        }
+
+        public TaskRecord getTaskByTaskId(string dbPath, string task_id)
+        {
+            TaskRecord task = null;
+            var connectionString = String.Format("Data Source={0};Version=3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM task WHERE (id) = @task_id";
+                    cmd.Parameters.Add(new SqliteParameter("@task_id", task_id));
+                    cmd.CommandType = CommandType.Text;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        int i = 0;
+                        while (reader.Read())
+                        {
+                            Config.log("CLIENTBYTASK ARE BEING READ");
+                            i++;
+                            task = new TaskRecord(reader);
+                        }
+                        if (i > 1)
+                        {
+                            Config.log("ERROR MORE CLIENT RECORDS THAN EXPECTED!!!!!!!!");
+                        }
+                        if (task == null)
+                        {
+                            throw new ArgumentException("No such task! ", task_id);
+                        }
+                    }
+                }
+                conn.Close();
+            }
+            Config.log("CLIENT RETURNED TO TASKRECORDS");
+            return task;
         }
 
         public List<ClientRecord> getAllClients(string dbPath)

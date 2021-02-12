@@ -33,7 +33,23 @@ namespace ZAPP
             ImageView iconClick = FindViewById<ImageView>(Resource.Id.imageClick);
             iconClick.Click += delegate
             {
-             goToHome();
+                goToHome();
+            };
+            ToggleButton checkInOut = FindViewById<ToggleButton>(Resource.Id.containedButton);
+            TaskRecord task = Config.getTaskByTaskId(Intent.GetStringExtra("TASK_ID"));
+            string _id = task.get_id();
+            checkInOut.Click += delegate
+            {
+                if (checkInOut.Checked)
+                {
+                    Toast.MakeText(this, "Check-in timer activated", ToastLength.Short).Show();
+                }
+                else
+                {
+                    Toast.MakeText(this, "Check-out time registered", ToastLength.Short).Show();
+                    Config.updateTaskInDatabase(_id);
+                    checkInOut.Enabled = false;
+                }
             };
         }
 
@@ -92,16 +108,14 @@ namespace ZAPP
             
             ArrayList activityList = Config.getActivitiesByTask(taskId);
             List<UserActivity> records = new List<UserActivity>(); 
-            foreach (ActivityRecord activityRecord in activityList) // copy from results into records
+            foreach (ActivityRecord activityRecord in activityList) 
             {
                 UserActivity row = new UserActivity(activityRecord.id, activityRecord._id, activityRecord.activityName, activityRecord.isCompleted);
                 records.Add(row);
             }
-            // these 3 lines can be considered as a form in html
-
-            ListView listView = FindViewById<ListView>(Resource.Id.OverviewDetail); // link to overview in xml
-            listView.Adapter = new UserActivityListViewAdapter(this, records); // contains all stuff inside of listView => records are added here
-          //  listView.ItemClick += OnListItemClick; // when user clicks on list , the click is executed
+             
+            ListView listView = FindViewById<ListView>(Resource.Id.OverviewDetail); 
+            listView.Adapter = new UserActivityListViewAdapter(this, records);
         }
     }
 }
