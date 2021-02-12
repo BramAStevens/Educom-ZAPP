@@ -50,9 +50,9 @@ namespace ZAPP
             log(isCompleted + " FindupdateACtivityBOOL");
         }
 
-        public static void updateTaskInDatabase(string _id)
+        public static void updateTaskInDatabase(TaskRecord task)
         {
-            db.updateTaskInDatabase(_id, dbPath);
+            db.updateTaskInDatabase(task, dbPath);
         }
 
         public static List<TaskRecord> getTasksByUser(string user_id) // WORKS CORRECTLY

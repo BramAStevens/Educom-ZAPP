@@ -37,17 +37,18 @@ namespace ZAPP
             };
             ToggleButton checkInOut = FindViewById<ToggleButton>(Resource.Id.containedButton);
             TaskRecord task = Config.getTaskByTaskId(Intent.GetStringExtra("TASK_ID"));
-            string _id = task.get_id();
             checkInOut.Click += delegate
             {
                 if (checkInOut.Checked)
                 {
                     Toast.MakeText(this, "Check-in timer activated", ToastLength.Short).Show();
+                    task.startTask = DateTime.Now.ToString();
                 }
                 else
                 {
                     Toast.MakeText(this, "Check-out time registered", ToastLength.Short).Show();
-                    Config.updateTaskInDatabase(_id);
+                    task.stopTask = DateTime.Now.ToString();
+                    Config.updateTaskInDatabase(task);
                     checkInOut.Enabled = false;
                 }
             };

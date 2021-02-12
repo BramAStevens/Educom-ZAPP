@@ -281,7 +281,7 @@ namespace ZAPP
             }
         }
 
-        public void updateTaskInDatabase(string _id, string dbPath)
+        public void updateTaskInDatabase(TaskRecord task, string dbPath)
         {
             var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
             using (var conn = new SqliteConnection(connectionString))
@@ -290,9 +290,13 @@ namespace ZAPP
 
                 using (var cmd = conn.CreateCommand())
                 {
-                    // Table data
-                    cmd.CommandText = "UPDATE task SET isCompleted = true WHERE _id = @_id";
+                    string _id = task._id;
+                    string startTask = task.startTask;
+                    string stopTask = task.stopTask;
+                    cmd.CommandText = "UPDATE task SET isCompleted = true, startTask = @startTask, stopTask = @stopTask WHERE _id = @_id";
                     cmd.Parameters.Add(new SqliteParameter("@_id", _id));
+                    cmd.Parameters.Add(new SqliteParameter("@startTask", startTask));
+                    cmd.Parameters.Add(new SqliteParameter("@stopTask", stopTask));
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
                     uploadTaskData();
@@ -593,8 +597,10 @@ namespace ZAPP
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM task WHERE (user_id) = @user_id AND (isCompleted) = false";
+      
+                    cmd.CommandText = "SELECT * FROM task WHERE (user_id) = @user_id AND (isCompleted) = false AND (taskDate) >= date('now', '0 day') AND (taskDate) <= date('now', '1 day')";
                     cmd.Parameters.Add(new SqliteParameter("@user_id", user_id));
+    
                     cmd.CommandType = CommandType.Text;
 
                     using (var reader = cmd.ExecuteReader())
