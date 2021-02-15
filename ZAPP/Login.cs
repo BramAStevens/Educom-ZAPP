@@ -23,17 +23,16 @@ namespace ZAPP
           EditText editUsername = FindViewById<EditText>(Resource.Id.editUsername);
           EditText editPassword = FindViewById<EditText>(Resource.Id.editPassword);
           Button loginButton = FindViewById<Button>(Resource.Id.loginButton);
-          Button skipButton = FindViewById<Button>(Resource.Id.skipButton);
 
             loginButton.Click += delegate
             {
                 login(editUsername.Text, editPassword.Text);
             };
 
-            skipButton.Click += delegate
-            {
-                goToHome();
-            };
+       //     skipButton.Click += delegate
+       //     {
+       //         goToHome();
+       //     };
         }
        
         protected void login(string username, string password)
@@ -50,7 +49,7 @@ namespace ZAPP
             else
             {
                 storedPassword = user.getPassword();
-              //  userId = user.getId();
+                userId = user.getId();
                 if (password == storedPassword)
                 {
              

@@ -44,26 +44,22 @@ namespace ZAPP
             Resources res = activity.Resources;
             string app_name = res.GetString(Resource.String.app_name);
             string app_version = res.GetString(Resource.String.app_version);
-
             string dbname = $"_db_{app_name}_{app_version}_{_database.ZAPPDB}.sqlite";
             Console.WriteLine(dbname);
-
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             string databasePath = Path.Combine(documentsPath, dbname);
             return databasePath;
         }
-        // Database maken
-        public void createDatabase(string url, string createTableData, Action<string, string> downloadData) // 
+     
+        public void createDatabase(string url, string createTableData, Action<string, string> downloadData) 
         {
                 string databasePath = makeDatabaseName(this.activity); 
-
                 var connectionString = String.Format("Data Source={0};Version=3;", databasePath);
                 using (var conn = new SqliteConnection(connectionString))
                 {
                     conn.Open();
                     using (var cmd = conn.CreateCommand())
                     {
-                        // Table data
                         cmd.CommandText = createTableData;
                         cmd.CommandType = CommandType.Text;
                         cmd.ExecuteNonQuery();
@@ -76,7 +72,6 @@ namespace ZAPP
         public void createAllDatabases()
         {
             Resources res = this.activity.Resources;
-
             createDatabase(taskUrl, res.GetString(Resource.String.createTableTask), downloadTaskData);
             createDatabase(activityUrl, res.GetString(Resource.String.createTableActivity), downloadActivityData);
             createDatabase(userUrl, res.GetString(Resource.String.createTableUser), downloadUserData);
@@ -93,15 +88,10 @@ namespace ZAPP
                 string download = Encoding.ASCII.GetString(myDataBuffer);
                 JsonValue value = JsonValue.Parse(download);
                 var entries = value["entries"];
-
                 foreach (JsonObject item in entries)
                 {
-
-                    Config.log($"{item["map"]} = map, {item["address"]} = address,  {item["telephone"]} = telephone, {item["planning"]} = planning ");
                     this.clientToDatabase(item["map"], item["address"], item["telephone"], item["planning"], databasePath);
-
                 }
-
             }
             catch (WebException)
             {
@@ -116,9 +106,7 @@ namespace ZAPP
             {
                 List<ActivityRecord> allActivities = Config.getAllActivities();
                 var objAsJson = JsonConvert.SerializeObject(allActivities);
-                Config.log(objAsJson.ToString() + "= JSON FINDME");
                 string result = writeJsonToServer(objAsJson.ToString(), postActivityUrl);
-                Config.log("RESULT OF WRITE JSON =" + result);
             }
             catch (WebException)
             {
@@ -134,9 +122,7 @@ namespace ZAPP
             {
                 List<TaskRecord> allTasks = Config.getAllTasks();
                 var objAsJson = JsonConvert.SerializeObject(allTasks);
-                Config.log(objAsJson.ToString() + "= JSON FINDME");
                 string result = writeJsonToServer(objAsJson.ToString(), postTaskUrl);
-                Config.log("RESULT OF WRITE JSON =" + result);
             }
             catch (WebException)
             {
@@ -149,12 +135,10 @@ namespace ZAPP
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
-
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
                 streamWriter.Write("{\"data\": " + json + " }");
             }
-
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
@@ -176,12 +160,8 @@ namespace ZAPP
 
                 foreach (JsonObject item in entries)
                 {
-
-                  //   Config.log($"{item["task_id"]} = task_id, {item["isCompleted"]} = isCompleted,  {item["activityName"]} = activityName");
                     this.activityToDatabase(item["_id"], item["task_id"], item["isCompleted"], item["activityName"], databasePath);
-
                 }
-
             }
             catch (WebException)
             {
@@ -202,12 +182,8 @@ namespace ZAPP
 
                 foreach (JsonObject item in entries)
                 {
-
-                    Console.WriteLine($"{item["username"]} = username, {item["password"]} = password");
                     this.userToDatabase(item["username"], item["password"], databasePath);
-
                 }
-
             }
             catch (WebException)
             {
@@ -226,7 +202,6 @@ namespace ZAPP
                 var entries = value["entries"];
                 foreach (JsonObject item in entries)
                 { 
-                   // Config.log($"{item["client_id"]} = client_id, {item["user_id"]} = user_id, {item["startTask"]} = startTask, {item["stopTask"]} = stopTask, {item["taskDate"]} = taskDate, {item["taskName"]} = taskName, {item["isCompleted"]} = isCompleted");
                     this.taskToDatabase(item["_id"], item["client_id"], item["user_id"], item["startTask"], item["stopTask"], item["taskDate"], item["taskName"], item["isCompleted"], databasePath);
                 }
             }
@@ -245,7 +220,6 @@ namespace ZAPP
 
                 using (var cmd = conn.CreateCommand())
                 {
-                    // Table data
                     cmd.CommandText = "INSERT INTO client (map, address, telephone, planning) VALUES (@map, @address, @telephone, @planning)";
                     cmd.Parameters.Add(new SqliteParameter("@map", map));
                     cmd.Parameters.Add(new SqliteParameter("@address", address));
@@ -269,7 +243,6 @@ namespace ZAPP
 
                 using (var cmd = conn.CreateCommand())
                 {
-                    // Table data
                     cmd.CommandText = "UPDATE activity SET isCompleted = @isCompleted WHERE _id = @_id";
                     cmd.Parameters.Add(new SqliteParameter("@_id", _id));
                     cmd.Parameters.Add(new SqliteParameter("@isCompleted", isCompleted));
@@ -290,13 +263,10 @@ namespace ZAPP
 
                 using (var cmd = conn.CreateCommand())
                 {
-                    string _id = task._id;
-                    string startTask = task.startTask;
-                    string stopTask = task.stopTask;
                     cmd.CommandText = "UPDATE task SET isCompleted = true, startTask = @startTask, stopTask = @stopTask WHERE _id = @_id";
-                    cmd.Parameters.Add(new SqliteParameter("@_id", _id));
-                    cmd.Parameters.Add(new SqliteParameter("@startTask", startTask));
-                    cmd.Parameters.Add(new SqliteParameter("@stopTask", stopTask));
+                    cmd.Parameters.Add(new SqliteParameter("@_id", task._id));
+                    cmd.Parameters.Add(new SqliteParameter("@startTask", task.startTask));
+                    cmd.Parameters.Add(new SqliteParameter("@stopTask", task.stopTask));
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
                     uploadTaskData();
@@ -314,7 +284,6 @@ namespace ZAPP
 
                 using (var cmd = conn.CreateCommand())
                 {
-                    // Table data
                     cmd.CommandText = "INSERT INTO activity (_id, task_id, isCompleted, activityName) VALUES (@_id, @task_id, @isCompleted, @activityName)";
                     cmd.Parameters.Add(new SqliteParameter("@_id", _id));
                     cmd.Parameters.Add(new SqliteParameter("@task_id", task_id));
@@ -322,7 +291,6 @@ namespace ZAPP
                     cmd.Parameters.Add(new SqliteParameter("@activityName", activityName));
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
-                    Config.log("ACTIVITY INSERTED INTO DB");
                 }
                 conn.Close();
             }
@@ -337,13 +305,11 @@ namespace ZAPP
 
                 using (var cmd = conn.CreateCommand())
                 {
-                    // Table data
                     cmd.CommandText = "INSERT INTO user (username,password) VALUES (@username, @password)";
                     cmd.Parameters.Add(new SqliteParameter("@username", username));
                     cmd.Parameters.Add(new SqliteParameter("@password", password));
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine("USER INSERTED TO DATABASE");
                 }
                 conn.Close();
             }
@@ -356,10 +322,8 @@ namespace ZAPP
             using (var conn = new SqliteConnection(connectionString))
             {
                 conn.Open();
-
                 using (var cmd = conn.CreateCommand())
                 {
-                    // Table data
                     cmd.CommandText = "INSERT INTO task (_id, client_id, user_id, startTask, stopTask, taskDate, taskName, isCompleted) VALUES (@_id, @client_id, @user_id, @startTask, @stopTask, @taskDate, @taskName, @isCompleted)";
                     cmd.Parameters.Add(new SqliteParameter("@_id", _id));
                     cmd.Parameters.Add(new SqliteParameter("@client_id", client_id));
@@ -371,7 +335,6 @@ namespace ZAPP
                     cmd.Parameters.Add(new SqliteParameter("@isCompleted", isCompleted));
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
-                    Console.WriteLine("DATA INSERTED TO DATABASE");
                 }
                 conn.Close();
             }
@@ -389,20 +352,16 @@ namespace ZAPP
                     cmd.CommandText = "SELECT * FROM activity WHERE (_id) = @_id";
                     cmd.Parameters.Add(new SqliteParameter("@_id", _id));
                     cmd.CommandType = CommandType.Text;
-
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            Config.log("ALL ACTIVITIES ARE BEING READ");
                             activity = new ActivityRecord(reader);
                         }
                     }
                 }
                 conn.Close();
             }
-            Config.log("DATA RETURNED TO ACTIVITYRECORDS");
-
             return activity;
         }
 
@@ -422,15 +381,12 @@ namespace ZAPP
                     {
                         while (reader.Read())
                         {
-                            Config.log("ALL ACTIVITIES ARE BEING READ");
                             activityRecords.Add(new ActivityRecord(reader));
                         }
                     }
                 }
                 conn.Close();
             }
-            Config.log("DATA RETURNED TO ACTIVITYRECORDS");
-           
                 return activityRecords;
         }
 
@@ -477,19 +433,17 @@ namespace ZAPP
                         int i = 0;
                         while (reader.Read())
                         {
-                            Config.log("USERBYUSERNAME ARE BEING READ");
                             i++;
                             user = new UserRecord(reader);
                         }
                         if (i > 1)
                         {
-                            Config.log("ERROR MORE USER RECORDS THAN EXPECTED!!!!!!!!");
+                            Config.log("ERROR MORE USER RECORDS THAN EXPECTED!");
                         }
                     }
                 }
                 conn.Close();
             }
-            Config.log("USERS RETURNED TO USERRECORDS");
             return user;
         }
         public ClientRecord getClient(string dbPath, string client_id)
@@ -510,13 +464,12 @@ namespace ZAPP
                         int i = 0;
                         while (reader.Read()) 
                         {
-                            Config.log("CLIENTBYTASK ARE BEING READ");
                             i++;
                             client = new ClientRecord(reader);
                         }
                         if (i>1)
                         {
-                            Config.log("ERROR MORE CLIENT RECORDS THAN EXPECTED!!!!!!!!");
+                            Config.log("ERROR MORE CLIENT RECORDS THAN EXPECTED!!");
                         }
                         if (client == null)
                         {
@@ -526,7 +479,6 @@ namespace ZAPP
                 }
                 conn.Close();
             }
-            Config.log("CLIENT RETURNED TO TASKRECORDS");
             return client;
         }
 
@@ -547,16 +499,12 @@ namespace ZAPP
                     {
                         while (reader.Read())
                         {
-                            Config.log("ACTIVITIESBYTASK ARE BEING READ");
-                            
                             activityRecords.Add(new ActivityRecord(reader));
-                           
                         }
                     }
                 }
                 conn.Close();
             }
-            Config.log("ACTIVITIESBYTASK RETURNED TO ACTIVITYRECORDS");
             return activityRecords;
         }
 
@@ -576,16 +524,13 @@ namespace ZAPP
                     {
                         while (reader.Read())
                         {
-                            Config.log("ALL USERS ARE BEING READ");
                             userRecords.Add(new UserRecord(reader));
                         }
                     }
                 }
                 conn.Close();
             }
-            Config.log("DATA RETURNED TO USERRECORDS");
-            return userRecords;
-            
+            return userRecords;   
         }
 
         public List<TaskRecord> getTasksByUser(string dbPath, string user_id)
@@ -597,24 +542,19 @@ namespace ZAPP
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-      
                     cmd.CommandText = "SELECT * FROM task WHERE (user_id) = @user_id AND (isCompleted) = false AND (taskDate) >= date('now', '0 day') AND (taskDate) <= date('now', '1 day')";
                     cmd.Parameters.Add(new SqliteParameter("@user_id", user_id));
-    
                     cmd.CommandType = CommandType.Text;
-
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            Config.log("ALL TASKS ARE BEING READ");
                             taskRecords.Add(new TaskRecord(reader));
                         }
                     }
                 }
                 conn.Close();
             }
-            Config.log("TASKS RETURNED TO TASKRECORDS");
             return taskRecords;
         }
 
@@ -636,13 +576,12 @@ namespace ZAPP
                         int i = 0;
                         while (reader.Read())
                         {
-                            Config.log("CLIENTBYTASK ARE BEING READ");
                             i++;
                             task = new TaskRecord(reader);
                         }
                         if (i > 1)
                         {
-                            Config.log("ERROR MORE CLIENT RECORDS THAN EXPECTED!!!!!!!!");
+                            Config.log("ERROR MORE CLIENT RECORDS THAN EXPECTED!");
                         }
                         if (task == null)
                         {
@@ -652,7 +591,6 @@ namespace ZAPP
                 }
                 conn.Close();
             }
-            Config.log("CLIENT RETURNED TO TASKRECORDS");
             return task;
         }
 
@@ -667,19 +605,16 @@ namespace ZAPP
                 {
                     cmd.CommandText = "SELECT * FROM client";
                     cmd.CommandType = CommandType.Text;
-
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            Config.log("ALL CLIENTS ARE BEING READ");
                             clientRecords.Add(new ClientRecord(reader));
                         }
                     }
                 }
                 conn.Close();
             }
-            Config.log("CLIENT RETURNED TO CLIENTRECORDS");
             return clientRecords;
         }
     }

@@ -18,8 +18,7 @@ namespace ZAPP
         public int id;
         public string username;
         public string password;
-      
-
+     
         public UserRecord()
         {
 
