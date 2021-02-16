@@ -24,10 +24,12 @@ namespace ZAPP
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Home);
             Config.deleteTaskTableInDb();
+            Config.createTaskTable();
             Config.downloadTaskData();
             List<TaskRecord> taskList = Config.getTasksByUser(Login.userId.ToString());
+            var taskListNoDupe = taskList.GroupBy(x => x._id).Select(x => x.First()).ToList();
             taskRecords = new List<Task>(); 
-            foreach (TaskRecord value in taskList)
+            foreach (TaskRecord value in taskListNoDupe)
             {
                 Task row = new Task(value._id, value.client_id, value.taskName, value.taskDate);
                 taskRecords.Add(row);

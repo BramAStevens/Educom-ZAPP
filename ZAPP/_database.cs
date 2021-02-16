@@ -69,6 +69,12 @@ namespace ZAPP
                 downloadData(url, databasePath);
         }
 
+        public void createTableTask()
+        {
+            Resources res = this.activity.Resources;
+            createDatabase(taskUrl, res.GetString(Resource.String.createTableTask), downloadTaskData);
+        }
+
         public void createAllDatabases()
         {
             Resources res = this.activity.Resources;
@@ -326,7 +332,7 @@ namespace ZAPP
 
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "DELETE FROM task";
+                    cmd.CommandText = "DROP TABLE task";
                     cmd.CommandType = CommandType.Text;
                     cmd.ExecuteNonQuery();
                 }

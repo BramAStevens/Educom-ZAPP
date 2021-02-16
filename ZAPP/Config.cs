@@ -27,6 +27,11 @@ namespace ZAPP
         {
           return db;
         }
+
+        public static void createTaskTable()
+        {
+         db.createTableTask();
+        }
     
         public static ClientRecord getClient(string clientId)
         {
