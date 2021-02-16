@@ -40,9 +40,6 @@
    android:layout_width="170dp"
    android:layout_height="60dp" 
     android:shadowColor="#000000"
-    android:shadowDx="6"
-    android:shadowDy="6"
-    android:shadowRadius="5" 
    android:text= "Login"
     android:textSize="20sp" 
 />

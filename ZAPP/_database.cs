@@ -169,6 +169,7 @@ namespace ZAPP
             }
         }
 
+
         public void downloadUserData(string url, string databasePath)
         {
             var webClient = new WebClient();
@@ -316,6 +317,40 @@ namespace ZAPP
             this.getAllUsers(dbPath);
         }
 
+        public void deleteTaskTableInDb(string dbPath)
+        {
+            var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM task";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                }
+                conn.Close();
+            }
+        }
+
+        public void deleteActivityTableInDb(string dbPath)
+        {
+            var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM activity";
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                }
+                conn.Close();
+            }
+        }
+
         public void taskToDatabase(string _id, string client_id, string user_id, string startTask, string stopTask, string taskDate, string taskName, bool isCompleted, string dbPath)
         {
             var connectionString = String.Format("Data Source ={0}; Version = 3;", dbPath);
@@ -325,6 +360,7 @@ namespace ZAPP
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = "INSERT INTO task (_id, client_id, user_id, startTask, stopTask, taskDate, taskName, isCompleted) VALUES (@_id, @client_id, @user_id, @startTask, @stopTask, @taskDate, @taskName, @isCompleted)";
+
                     cmd.Parameters.Add(new SqliteParameter("@_id", _id));
                     cmd.Parameters.Add(new SqliteParameter("@client_id", client_id));
                     cmd.Parameters.Add(new SqliteParameter("@user_id", user_id));
@@ -542,7 +578,7 @@ namespace ZAPP
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM task WHERE (user_id) = @user_id AND (isCompleted) = false AND (taskDate) >= date('now', '0 day') AND (taskDate) <= date('now', '1 day')";
+                    cmd.CommandText = "SELECT * FROM task WHERE (user_id) = @user_id AND (isCompleted) = false AND (taskDate) >= date('now', '0 day') AND (taskDate) <= date('now', '1 day') ORDER BY taskDate ASC";
                     cmd.Parameters.Add(new SqliteParameter("@user_id", user_id));
                     cmd.CommandType = CommandType.Text;
                     using (var reader = cmd.ExecuteReader())
@@ -567,7 +603,7 @@ namespace ZAPP
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM task WHERE (id) = @task_id";
+                    cmd.CommandText = "SELECT * FROM task WHERE (_id) = @task_id";
                     cmd.Parameters.Add(new SqliteParameter("@task_id", task_id));
                     cmd.CommandType = CommandType.Text;
 

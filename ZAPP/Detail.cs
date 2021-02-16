@@ -25,9 +25,9 @@ namespace ZAPP
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Detail);
-
+            Config.deleteActivityTableInDb();
+            Config.downloadActivityData();
             makeTabs();
-            
             displayClientForTask(Intent.GetStringExtra("CLIENT_ID"));
             makeActivityList(Intent.GetStringExtra("TASK_ID"));
             ImageView iconClick = FindViewById<ImageView>(Resource.Id.imageClick);

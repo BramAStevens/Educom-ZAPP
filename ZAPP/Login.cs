@@ -67,7 +67,6 @@ namespace ZAPP
         protected void goToHome()
         {
                 StartActivity(typeof(Home));
-               
         }
     }
 } 

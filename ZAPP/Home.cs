@@ -23,12 +23,13 @@ namespace ZAPP
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Home);
-            
+            Config.deleteTaskTableInDb();
+            Config.downloadTaskData();
             List<TaskRecord> taskList = Config.getTasksByUser(Login.userId.ToString());
             taskRecords = new List<Task>(); 
             foreach (TaskRecord value in taskList)
             {
-                Task row = new Task(value.id, value.client_id, value.taskName, value.taskDate);
+                Task row = new Task(value._id, value.client_id, value.taskName, value.taskDate);
                 taskRecords.Add(row);
             }
             listView = FindViewById<ListView>(Resource.Id.Overview);
@@ -40,7 +41,7 @@ namespace ZAPP
             var selectedTask = taskRecords[e.Position];
             var intent = new Intent(this, typeof(Detail));
             intent.PutExtra("CLIENT_ID", selectedTask.client_id.ToString()); 
-            intent.PutExtra("TASK_ID", selectedTask.id.ToString()); 
+            intent.PutExtra("TASK_ID", selectedTask._id.ToString()); 
             StartActivityForResult(intent, 0); 
         }
     }

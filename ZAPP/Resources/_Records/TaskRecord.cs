@@ -25,7 +25,6 @@ namespace ZAPP
         public string taskName;
         public bool isCompleted;
 
-
         public TaskRecord()
         {
 

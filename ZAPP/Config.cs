@@ -28,19 +28,14 @@ namespace ZAPP
           return db;
         }
     
-        public static ClientRecord getClient(string clientId) // for detail page (map and address)
+        public static ClientRecord getClient(string clientId)
         {
             return db.getClient(dbPath, clientId);
         }
 
-        public static ArrayList getActivitiesByTask(string task_id) // to show all activities per task in detail // WORKS CORRECTLY
+        public static ArrayList getActivitiesByTask(string task_id)
         {
-
             return db.getActivitiesByTask(dbPath, task_id);
-            // loop here 
-          //  tasks = db.getAllactivities
-            // loop over it in other functions with foreach
-
         }
 
         public static void updateActivityInDatabase(string _id, bool isCompleted)
@@ -55,22 +50,41 @@ namespace ZAPP
             db.updateTaskInDatabase(task, dbPath);
         }
 
-        public static List<TaskRecord> getTasksByUser(string user_id) // WORKS CORRECTLY
+        public static List<TaskRecord> getTasksByUser(string user_id)
         {
             return db.getTasksByUser(dbPath, user_id);
         }
 
-        public static TaskRecord getTaskByTaskId(string taskId) // WORKS CORRECTLY
+        public static TaskRecord getTaskByTaskId(string taskId)
         {
             return db.getTaskByTaskId(dbPath, taskId);
         }
 
-        public static List<ActivityRecord> getAllActivities() // is still hardcoded in _database class
+        public static List<ActivityRecord> getAllActivities() 
         {
            List<ActivityRecord> activities = db.getAllActivities(dbPath);
            return(activities);
         }
 
+        public static void downloadTaskData()
+        {
+            db.downloadTaskData("http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/task?token=9d9a3b472d501a972c788077b12fb5/", dbPath);
+        }
+
+        public static void downloadActivityData()
+        {
+            db.downloadActivityData("http://192.168.0.143/Cockpit-ZAPP/cockpit-master/api/collections/get/activity?token=9d9a3b472d501a972c788077b12fb5/", dbPath);
+        }
+
+        public static void deleteTaskTableInDb()
+        {
+            db.deleteTaskTableInDb(dbPath);
+        }
+
+        public static void deleteActivityTableInDb()
+        {
+            db.deleteActivityTableInDb(dbPath);
+        }
         public static void uploadActivityData()
         {
             db.uploadActivityData();
