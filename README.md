@@ -18,7 +18,7 @@ Content management system. Furthermore, the API is synchronized with the SQLite 
 # UX Design / Prototype
 
 <img src="Images/cockpit.jpg">
-<img src="Images/home.jpg">
+<img src="Images/home.jpg" style="height: 50%; width: 50%;">
 <img src="Images/login.jpg">
 <img src="Images/detailAddress.jpg">
 <img src="Images/detailMap.jpg">
