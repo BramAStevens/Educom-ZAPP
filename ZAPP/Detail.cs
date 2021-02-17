@@ -20,7 +20,6 @@ namespace ZAPP
     [Activity(Label = "Detail")]
     public class Detail : Activity
     {
-        
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -62,7 +61,6 @@ namespace ZAPP
         private Android.Graphics.Bitmap GetImageBitmapFromUrl(string url)
         {
             Android.Graphics.Bitmap imageBitmap = null;
-            
             using (var webClient = new WebClient())
             {
                 var imageBytes = webClient.DownloadData(url);
@@ -71,7 +69,6 @@ namespace ZAPP
                     imageBitmap = BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
                 }
             }
-
             return imageBitmap;
         }
 
@@ -106,7 +103,6 @@ namespace ZAPP
         }
         private void makeActivityList(string taskId)
         {
-            
             ArrayList activityList = Config.getActivitiesByTask(taskId);
             List<UserActivity> records = new List<UserActivity>(); 
             foreach (ActivityRecord activityRecord in activityList) 
@@ -114,7 +110,6 @@ namespace ZAPP
                 UserActivity row = new UserActivity(activityRecord.id, activityRecord._id, activityRecord.activityName, activityRecord.isCompleted);
                 records.Add(row);
             }
-             
             ListView listView = FindViewById<ListView>(Resource.Id.OverviewDetail); 
             listView.Adapter = new UserActivityListViewAdapter(this, records);
         }

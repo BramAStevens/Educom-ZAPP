@@ -14,8 +14,8 @@ namespace ZAPP
     class HomeListViewAdapter : BaseAdapter<Task>
     {
         List<Task> items;
-        
         Activity context;
+
         public HomeListViewAdapter(Activity context, List<Task> items)
         : base()
         {
@@ -34,6 +34,7 @@ namespace ZAPP
         {
             return position;
         }
+
         public override View GetView(int position, View view, ViewGroup parent)
         {
             var item = items[position];
@@ -47,11 +48,9 @@ namespace ZAPP
             {
                 view.FindViewById<TextView>(Resource.Id.Text1).Text = item.taskName;
             }
-            
             view.FindViewById<TextView>(Resource.Id.Text2).Text = client.getAddress();
             view.FindViewById<TextView>(Resource.Id.Text3).Text = item.taskDate;
             return view;
         }
-      
-    } // end Class
-} // end NameSpace
+    } 
+} 

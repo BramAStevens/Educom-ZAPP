@@ -33,7 +33,6 @@ namespace ZAPP
             this.telephone = (string)record["telephone"];
             this.planning = (string)record["planning"];
         }
-
         public ClientRecord(SqliteDataReader record)
         {
             this.id = (int)(Int64)record["id"];
@@ -42,6 +41,7 @@ namespace ZAPP
             this.telephone = (string)record["telephone"];
             this.planning = (string)record["planning"];
         }
+
         public string getAddress()
         {
             return this.address;
@@ -50,12 +50,10 @@ namespace ZAPP
         {
             return this.address;
         }
-
         public string getTelephone()
         {
             return this.telephone;
         }
-
         public string getPlanning()
         {
             return this.planning;

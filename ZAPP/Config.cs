@@ -14,7 +14,6 @@ namespace ZAPP
 {
     static class Config
     {
-       
         private static _database db;
         private static string dbPath;
         public static void callDatabase(_database _db, string _dbPath)
@@ -25,12 +24,12 @@ namespace ZAPP
 
         public static _database getDB()
         {
-          return db;
+            return db;
         }
 
         public static void createTaskTable()
         {
-         db.createTableTask();
+            db.createTableTask();
         }
     
         public static ClientRecord getClient(string clientId)
@@ -67,8 +66,8 @@ namespace ZAPP
 
         public static List<ActivityRecord> getAllActivities() 
         {
-           List<ActivityRecord> activities = db.getAllActivities(dbPath);
-           return(activities);
+            List<ActivityRecord> activities = db.getAllActivities(dbPath);
+            return(activities);
         }
 
         public static void downloadTaskData()
@@ -98,13 +97,11 @@ namespace ZAPP
         public static List<UserRecord> getAllUsers() 
         {
            return db.getAllUsers(dbPath);
- 
         }
 
         public static List<TaskRecord> getAllTasks() 
         {
             return db.getAllTasks(dbPath);
-
         }
 
         public static List<ClientRecord> getAllClients()
@@ -124,7 +121,6 @@ namespace ZAPP
         public static ClientRecord getClient(string clientId, Activity activity)
         {
             ClientRecord client = null;
-
             try
             {
                 client = Config.getClient(clientId);

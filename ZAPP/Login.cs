@@ -17,9 +17,8 @@ namespace ZAPP
         public static int userId;
         protected override void OnCreate(Bundle bundle)
         {
-            base.OnCreate(bundle);
-            SetContentView(Resource.Layout.Login);
-
+          base.OnCreate(bundle);
+          SetContentView(Resource.Layout.Login);
           EditText editUsername = FindViewById<EditText>(Resource.Id.editUsername);
           EditText editPassword = FindViewById<EditText>(Resource.Id.editPassword);
           Button loginButton = FindViewById<Button>(Resource.Id.loginButton);
@@ -52,7 +51,6 @@ namespace ZAPP
                 userId = user.getId();
                 if (password == storedPassword)
                 {
-             
                     goToHome();
                 }
                 else

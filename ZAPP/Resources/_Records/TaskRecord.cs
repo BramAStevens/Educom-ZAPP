@@ -54,7 +54,6 @@ namespace ZAPP
             this.taskDate = (string)record["taskDate"];
             this.isCompleted = (bool)record["isCompleted"];
         }
-
         public string get_id()
         {
             return this._id;

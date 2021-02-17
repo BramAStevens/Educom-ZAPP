@@ -20,7 +20,6 @@ namespace ZAPP
         public string task_id;
         public bool isCompleted;
         public string activityName;
-
         public ActivityRecord()
         {
 
@@ -33,7 +32,6 @@ namespace ZAPP
             this.isCompleted = (bool)record["isCompleted"];
             this.activityName = (string)record["activityName"];
         }
-
         public ActivityRecord(SqliteDataReader record)
         {
             this.id = (int)(Int64)record["id"];

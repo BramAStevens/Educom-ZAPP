@@ -53,20 +53,20 @@ namespace ZAPP
      
         public void createDatabase(string url, string createTableData, Action<string, string> downloadData) 
         {
-                string databasePath = makeDatabaseName(this.activity); 
-                var connectionString = String.Format("Data Source={0};Version=3;", databasePath);
-                using (var conn = new SqliteConnection(connectionString))
+            string databasePath = makeDatabaseName(this.activity); 
+            var connectionString = String.Format("Data Source={0};Version=3;", databasePath);
+            using (var conn = new SqliteConnection(connectionString))
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
                 {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = createTableData;
-                        cmd.CommandType = CommandType.Text;
-                        cmd.ExecuteNonQuery();
-                    }
-                    conn.Close();
+                    cmd.CommandText = createTableData;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
                 }
-                downloadData(url, databasePath);
+                conn.Close();
+            }
+            downloadData(url, databasePath);
         }
 
         public void createTableTask()
@@ -104,6 +104,7 @@ namespace ZAPP
 
             }
         }
+
         public void uploadActivityData()
         {
             var webClient = new WebClient();
@@ -175,7 +176,6 @@ namespace ZAPP
             }
         }
 
-
         public void downloadUserData(string url, string databasePath)
         {
             var webClient = new WebClient();
@@ -197,6 +197,7 @@ namespace ZAPP
 
             }
         }
+
         public void downloadTaskData(string url, string databasePath)
         {
             var webClient = new WebClient();

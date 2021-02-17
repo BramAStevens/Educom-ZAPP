@@ -18,6 +18,5 @@ namespace ZAPP
         {
             this.address = address;
         }
-        
     }
 }

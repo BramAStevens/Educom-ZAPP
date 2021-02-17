@@ -17,7 +17,6 @@ namespace ZAPP
         public string client_id;
         public string taskName;
         public string taskDate;
-
         public Task(string _id, string client_id, string taskName, string taskDate)
         {
             this._id = _id;
@@ -25,6 +24,5 @@ namespace ZAPP
             this.taskName = taskName;
             this.taskDate = taskDate;
         }
-
     }
 }

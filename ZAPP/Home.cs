@@ -17,8 +17,6 @@ namespace ZAPP
     {
         ListView listView;
         List<Task> taskRecords;
-
-
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -27,9 +25,9 @@ namespace ZAPP
             Config.createTaskTable();
             Config.downloadTaskData();
             List<TaskRecord> taskList = Config.getTasksByUser(Login.userId.ToString());
-            var taskListNoDupe = taskList.GroupBy(x => x._id).Select(x => x.First()).ToList();
+            var taskListNoDuplication = taskList.GroupBy(x => x._id).Select(x => x.First()).ToList();
             taskRecords = new List<Task>(); 
-            foreach (TaskRecord value in taskListNoDupe)
+            foreach (TaskRecord value in taskListNoDuplication)
             {
                 Task row = new Task(value._id, value.client_id, value.taskName, value.taskDate);
                 taskRecords.Add(row);
@@ -38,6 +36,7 @@ namespace ZAPP
             listView.Adapter = new HomeListViewAdapter(this, taskRecords); 
             listView.ItemClick += OnListItemClick; 
         }
+
         protected void OnListItemClick(object sender, Android.Widget.AdapterView.ItemClickEventArgs e)
         {
             var selectedTask = taskRecords[e.Position];

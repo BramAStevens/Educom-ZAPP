@@ -21,10 +21,8 @@ namespace ZAPP
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-
             string databasePath = _database.makeDatabaseName(this);
             Config.callDatabase(new _database(this, !File.Exists(databasePath)), databasePath);
-          //  Thread.Sleep(500);
             StartActivity(typeof(Login));
         }
     }
