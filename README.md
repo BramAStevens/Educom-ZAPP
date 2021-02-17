@@ -9,12 +9,12 @@ Content management system. Furthermore, the API is synchronized with the SQLite 
 
 # Technologies used
 
-* **C#
-* **Restful API
-* **SQLite
-* **Xamarin
-* **XML
-* **.Net
+* **C#**
+* **Restful API**
+* **SQLite**
+* **Xamarin**
+* **XML**
+* **.Net**
 
 # UX Design / Prototype
 
